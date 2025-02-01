@@ -125,17 +125,24 @@
         });
 
         form.addEventListener("submit", function(event) {
+            event.preventDefault();
+            let avatarSelected = false;
+            let passwordFieldsMatched = false;
 
             if (selectedAvatarInput.value === "") {
                 console.log("selectedAvatarInput is empty");
                 avatarFeedback.textContent = "Please select an avatar.";
                 avatarFeedback.style.color = "red";
-                event.preventDefault();
-
+            } else {
+                avatarSelected = true;
             }
             if (passwordField.value !== confirmPasswordField.value) {
                 alert("Passwords do not match!");
-                event.preventDefault();
+            } else {
+                passwordFieldsMatched = true;
+            }
+            if (avatarSelected && passwordFieldsMatched) {
+                form.submit();
             }
         });
     });

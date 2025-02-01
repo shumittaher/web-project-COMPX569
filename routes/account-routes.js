@@ -5,7 +5,6 @@ const userDao = require("../modules/users-dao.js");
 const {response} = require("express");
 
 router.get("/login", async function (req, res) {
-    await userDao.testDBConnection()
     res.render("account/login");
 })
 
@@ -15,7 +14,8 @@ router.get("/create", async function (req, res) {
 
 })
 router.post("/create", async function (req, res) {
-    const {username, password, name} = req.body
+    const {username, password, confirmation, fullName, dob, description} = req.body
+
     try {
         const daoResponse = await userDao.createUser({username, password, name});
     } catch (SqlError){

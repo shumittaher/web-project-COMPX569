@@ -18,7 +18,9 @@ app.set("view engine", "handlebars");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({}));
 
-
+// Setup our routes
+const account = require("./routes/account-routes.js");
+app.use("/account", account);
 // TODO: Your app here
 
 

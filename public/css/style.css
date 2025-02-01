@@ -8,4 +8,10 @@
     width: 5rem;
     height: 5rem;
     border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.avatar-img:hover{
+    transform: scale(1.1);
 }

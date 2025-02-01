@@ -3,3 +3,9 @@
     max-width: 767px;
     background-color: rgb(244, 244, 235);
 }
+
+.avatar-img{
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+}

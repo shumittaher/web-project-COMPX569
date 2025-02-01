@@ -40,6 +40,17 @@
                 <textarea id="description" required class="form-control" type="text" rows="7" name="description"></textarea>
             </div>
 
+            <hr>
+
+            <div class="form-group">
+                <label class="mb-2"><strong>Choose Your Avatar:</strong></label>
+                <div id="avatar-container" class="d-flex flex-wrap justify-content-center">
+                    {{#each avatars}}
+                        <img src="/public/avatarImages/{{this}}" class="m-2 avatar-img">
+                    {{/each}}
+                </div>
+            </div>
+
         </div>
 
         <input class="btn btn-primary btn-lg mt-4" type="submit" value="✍️ Register">

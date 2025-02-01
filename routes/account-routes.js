@@ -23,7 +23,8 @@ router.post("/login", async function (req, res) {
 
     const {username, password } = req.body
     const user = await userDao.getUserByUsername(username)
-    const isMatch = await userDao.verifyPassword(username, password)
+
+    const isMatch = await userDao.verifyPassword(password, user.password);
 
     if (isMatch) {
         req.session.user = user;

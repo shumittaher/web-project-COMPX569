@@ -1,6 +1,13 @@
 const express = require("express");
 const router = express.Router();
 
+const userDao = require("../modules/users-dao.js");
+const {response} = require("express");
+
+router.get("/test", async function (req, res) {
+    await userDao.testDBConnection()
+    res.redirect("/");
+})
 
 
 module.exports = router;

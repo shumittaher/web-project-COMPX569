@@ -13,6 +13,12 @@ app.engine("handlebars", handlebars.create({
     defaultLayout: "main"
 }).engine);
 app.set("view engine", "handlebars");
+app.use("/bootstrap", express.static(__dirname + "/node_modules/bootstrap/dist"));
+
+
+const path = require("path");
+app.use("/public", express.static(path.join(__dirname, "public")));
+
 
 // Set up to read POSTed form data
 app.use(express.urlencoded({ extended: true }));

@@ -5,17 +5,20 @@
     <meta charset="UTF-8">
     <title>Post App</title>
     <link rel="stylesheet" href="/public/css/style.css">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+
 </head>
 
 <body>
 <nav>
-    <ul>
+    <ul class="nav">
         <li><a href="/">Home</a></li>
-        <li><a href="/login">Log in</a></li>
+        <li><a href="/account/login">Log in</a></li>
         <li><a href="/logout">Log out</a></li>
     </ul>
 </nav>
-    <main>
+    <main class="container-lg py-5 pt-sm-5">
         {{{body}}}
     </main>
 </body>

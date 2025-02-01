@@ -4,6 +4,17 @@ const router = express.Router();
 const userDao = require("../modules/users-dao.js");
 const {response} = require("express");
 
+router.get("/checkUserName", async function (req, res) {
+    const checkName = req.query.username
+    const checkedName = await userDao.getUserByUsername(checkName)
+
+    if (checkedName) {
+        res.json({ available: false, message: "Username is already taken" });
+    } else {
+        res.json({ available: true, message: "Username is available" });
+    }
+})
+
 router.get("/login", async function (req, res) {
     res.locals.message = req.query.message;
     res.render("account/login");

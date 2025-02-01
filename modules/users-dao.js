@@ -1,5 +1,14 @@
 const database = require("./database.js");
 
+
+async function getUserByUsername(username) {
+    const db = await database;
+    const result = await db.query("SELECT * FROM project_users WHERE username = ?", [username]);
+    return await result[0];
+}
+
+
+
 async function createUser(user) {
     const db = await database;
 
@@ -17,5 +26,6 @@ async function createUser(user) {
 }
 
 module.exports = {
+    getUserByUsername,
     createUser,
 }

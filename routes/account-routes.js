@@ -8,8 +8,9 @@ const {response} = require("express");
 router.get("/logout", function (req, res) {
     if (req.session.user) {
         delete req.session.user;
+        res.redirect("login?message=Successfully logged out!");
     }
-    res.redirect("login?message=Successfully logged out!");
+    res.redirect("login?message=You are already logged out!");
 })
 
 router.get("/login", async function (req, res) {
@@ -62,9 +63,7 @@ router.post("/create", async function (req, res) {
         }
     } catch (SqlError){
         res.redirect("create?message=Account validation failed!");
-
     }
-
 })
 
 module.exports = router;

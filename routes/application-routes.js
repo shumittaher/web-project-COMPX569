@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const messagesDao = require("../modules/messages-dao.js");
+const messagesDao = require("../modules/posts-dao.js");
 const {locals} = require("express/lib/application");
 const {response} = require("express");
 

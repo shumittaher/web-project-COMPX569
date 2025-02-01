@@ -14,11 +14,19 @@ router.get("/create", async function (req, res) {
 
 })
 router.post("/create", async function (req, res) {
-    const {username, password, confirmation, fullName, dob, description} = req.body
+    const {username, fullName, password, dob, description} = req.body
+    const user = {username, fullName, password, dob, description}
 
     try {
-        const daoResponse = await userDao.createUser({username, password, name});
+        const daoResponse = await userDao.createUser(user);
+        if (daoResponse) {
+            res.redirect("login?message=Account created successfully!");
+        }
+        else {
+            res.redirect("create?message=Account validation failed!");
+        }
     } catch (SqlError){
+        res.redirect("create?message=Account validation failed!");
 
     }
 

@@ -71,14 +71,21 @@
         const confirmPasswordField = document.querySelector('input[name="confirmation"]');
         const form = document.querySelector("form");
         const submitButton = form.querySelector("input[type='submit']");
+        const selectedAvatarInput = document.querySelector("#selectedAvatar");
 
         const usernameFeedback = document.querySelector('#usernameFeedback');
         const passwordFeedback = document.querySelector('#passwordFeedback');
+        const avatarFeedback = document.querySelector('#avatarFeedback');
+
+        function updateFeedback(element, message, color) {
+            element.textContent = message;
+            element.style.color = color;
+        }
 
         usernameField.addEventListener("blur", async function () {
             const username = usernameField.value.trim();
             if (username === "") {
-                usernameFeedback.textContent = "";
+                updateFeedback(usernameFeedback, "", "");
                 return;
             }
 
@@ -87,63 +94,50 @@
                 const data = await response.json();
 
                 if (data.available) {
-                    usernameFeedback.textContent = "✅ Username is available";
-                    usernameFeedback.style.color = "green";
+                    updateFeedback(usernameFeedback, "✅ Username is available", "green");
                 } else {
-                    usernameFeedback.textContent = "❌ Username is already taken";
-                    usernameFeedback.style.color = "red";
+                    updateFeedback(usernameFeedback, "❌ Username is already taken", "red");
                 }
             } catch (error) {
-                usernameFeedback.textContent = "⚠️ Error checking username";
-                usernameFeedback.style.color = "orange";
+                updateFeedback(usernameFeedback, "⚠️ Error checking username", "orange");
             }
         });
 
         confirmPasswordField.addEventListener("input", function() {
             if (passwordField.value !== confirmPasswordField.value) {
-                passwordFeedback.textContent = "Passwords do not match.";
-                passwordFeedback.style.color = "red";
+                updateFeedback(passwordFeedback, "❌ Passwords do not match.", "red");
                 submitButton.disabled = true;
             } else {
-                passwordFeedback.textContent = "Passwords match.";
-                passwordFeedback.style.color = "green";
+                updateFeedback(passwordFeedback, "✅ Passwords match.", "green");
                 submitButton.disabled = false;
             }
         });
 
         const avatarImages = document.querySelectorAll('.avatar-img');
-        const selectedAvatarInput = document.querySelector("#selectedAvatar");
-        const avatarFeedback = document.querySelector("#avatarFeedback");
-
         avatarImages.forEach(img => {
             img.addEventListener("click", function () {
                 avatarImages.forEach(i => i.style.outline = "none");
                 this.style.outline = "3px solid lightblue";
                 selectedAvatarInput.value = this.getAttribute("data-avatar");
-                avatarFeedback.textContent = "";
+                updateFeedback(avatarFeedback, "", "");
             });
         });
 
         form.addEventListener("submit", function(event) {
             event.preventDefault();
-            let avatarSelected = false;
-            let passwordFieldsMatched = false;
+            let avatarSelected = selectedAvatarInput.value !== "";
+            let passwordFieldsMatched = passwordField.value === confirmPasswordField.value;
 
-            if (selectedAvatarInput.value === "") {
-                console.log("selectedAvatarInput is empty");
-                avatarFeedback.textContent = "Please select an avatar.";
-                avatarFeedback.style.color = "red";
-            } else {
-                avatarSelected = true;
+            if (!avatarSelected) {
+                updateFeedback(avatarFeedback, "⚠️ Please select an avatar.", "red");
             }
-            if (passwordField.value !== confirmPasswordField.value) {
-                alert("Passwords do not match!");
-            } else {
-                passwordFieldsMatched = true;
+            if (!passwordFieldsMatched) {
+                updateFeedback(passwordFeedback, "❌ Passwords do not match!", "red");
             }
             if (avatarSelected && passwordFieldsMatched) {
                 form.submit();
             }
         });
     });
+
 </script>

@@ -10,7 +10,7 @@ const port = process.env.EXPRESS_PORT || 3000;
 
 // Setup Handlebars
 app.engine("handlebars", handlebars.create({
-    defaultLayout: null
+    defaultLayout: "main"
 }).engine);
 app.set("view engine", "handlebars");
 

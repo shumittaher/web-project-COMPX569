@@ -11,7 +11,7 @@ router.get("/", function (req, res){
 
 router.get("/home", function (req, res) {
 
-    res.render("home");
+    res.render("home", {message: "Welcome to the application!"});
 
 });
 

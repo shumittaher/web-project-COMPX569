@@ -5,11 +5,13 @@ const userDao = require("../modules/users-dao.js");
 const {response} = require("express");
 
 router.get("/login", async function (req, res) {
+    res.locals.message = req.query.message;
     res.render("account/login");
 })
 
 router.get("/create", async function (req, res) {
 
+    res.locals.message = req.query.message;
     res.render("account/create");
 
 })

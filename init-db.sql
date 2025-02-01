@@ -2,7 +2,7 @@
 CREATE TABLE IF NOT EXISTS project_users
 (
     id INT NOT NULL primary key auto_increment,
-    username VARCHAR(32),
+    username VARCHAR(32) unique,
     fullName VARCHAR(64),
     password VARCHAR(64),
     dob DATE,

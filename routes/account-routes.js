@@ -3,6 +3,7 @@ const router = express.Router();
 
 const userDao = require("../modules/users-dao.js");
 const {response} = require("express");
+const {createUser} = require("../modules/users-dao");
 
 
 router.get("/logout", function (req, res) {
@@ -21,9 +22,10 @@ router.get("/login", async function (req, res) {
 router.post("/login", async function (req, res) {
 
     const {username, password } = req.body
-    const user = await userDao.retrieveUserWithCredentials(username, password)
+    const user = await userDao.getUserByUsername(username)
+    const isMatch = await userDao.verifyPassword(username, password)
 
-    if (user) {
+    if (isMatch) {
         req.session.user = user;
         res.redirect("/");
     } else {

@@ -24,6 +24,15 @@ app.use("/public", express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({}));
 
+const session = require("express-session");
+app.use(session({
+    resave: false,
+    saveUninitialized: false,
+    secret: "COMPX569FinalProject"
+}));
+
+
+
 // Setup our routes
 const account = require("./routes/account-routes.js");
 app.use("/account", account);

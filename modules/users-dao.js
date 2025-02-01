@@ -4,9 +4,18 @@ const database = require("./database.js");
 async function getUserByUsername(username) {
     const db = await database;
     const result = await db.query("SELECT * FROM project_users WHERE username = ?", [username]);
-    return await result[0];
+    return result[0];
 }
 
+async function retrieveUserWithCredentials(username, password){
+    const db = await database;
+
+    const user = await db.query(
+        "select * from project_users where username = ? and password = ?",
+        [username, password]);
+
+    return user[0];
+}
 
 
 async function createUser(user) {

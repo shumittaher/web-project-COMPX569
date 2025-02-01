@@ -46,9 +46,11 @@
                 <label class="mb-2"><strong>Choose Your Avatar:</strong></label>
                 <div id="avatar-container" class="d-flex flex-wrap justify-content-center">
                     {{#each avatars}}
-                        <img src="/public/avatarImages/{{this}}" class="m-2 avatar-img">
+                        <img src="/public/avatarImages/{{this}}" class="m-2 avatar-img" data-avatar="{{this}}">
                     {{/each}}
                 </div>
+                <input type="hidden" id="selectedAvatar" name="avatar" required>
+                <small id="avatarFeedback" class="form-text"></small>
             </div>
 
         </div>
@@ -109,10 +111,31 @@
             }
         });
 
+        const avatarImages = document.querySelectorAll('.avatar-img');
+        const selectedAvatarInput = document.querySelector("#selectedAvatar");
+        const avatarFeedback = document.querySelector("#avatarFeedback");
+
+        avatarImages.forEach(img => {
+            img.addEventListener("click", function () {
+                avatarImages.forEach(i => i.style.outline = "none");
+                this.style.outline = "3px solid lightblue";
+                selectedAvatarInput.value = this.getAttribute("data-avatar");
+                avatarFeedback.textContent = "";
+            });
+        });
+
         form.addEventListener("submit", function(event) {
-            if (passwordField.value !== confirmPasswordField.value) {
+
+            if (selectedAvatarInput.value === "") {
+                console.log("selectedAvatarInput is empty");
+                avatarFeedback.textContent = "Please select an avatar.";
+                avatarFeedback.style.color = "red";
                 event.preventDefault();
+
+            }
+            if (passwordField.value !== confirmPasswordField.value) {
                 alert("Passwords do not match!");
+                event.preventDefault();
             }
         });
     });

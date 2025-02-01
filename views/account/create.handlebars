@@ -11,7 +11,8 @@
         <div class="d-grid row-gap-2">
 
             <div class="form-group">
-                <input required class="form-control" autofocus type="text" name="username" placeholder="Username">
+                <input id="username" required class="form-control" autofocus type="text" name="username" placeholder="Username">
+                <small id="usernameFeedback" class="form-text"></small>
             </div>
 
             <div class="form-group">
@@ -20,6 +21,7 @@
             <div class="form-group">
                 <input required class="form-control" type="password" name="confirmation" placeholder="Confirm Password">
             </div>
+            <small id="passwordFeedback" class="form-text"></small>
 
             <hr>
 
@@ -40,7 +42,7 @@
 
         </div>
 
-        <input class="btn btn-primary btn-lg mt-4" type="submit" value="Register">
+        <input class="btn btn-primary btn-lg mt-4" type="submit" value="✍️ Register">
 
     </form>
     <small class="text-muted">
@@ -48,3 +50,59 @@
     </small>
 
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const usernameField = document.querySelector('input[name="username"]');
+        const passwordField = document.querySelector('input[name="password"]');
+        const confirmPasswordField = document.querySelector('input[name="confirmation"]');
+        const form = document.querySelector("form");
+        const submitButton = form.querySelector("input[type='submit']");
+
+        const usernameFeedback = document.querySelector('#usernameFeedback');
+        const passwordFeedback = document.querySelector('#passwordFeedback');
+
+        usernameField.addEventListener("blur", async function () {
+            const username = usernameField.value.trim();
+            if (username === "") {
+                usernameFeedback.textContent = "";
+                return;
+            }
+
+            try {
+                const response = await fetch(`/account/checkUserName?username=${encodeURIComponent(username)}`);
+                const data = await response.json();
+
+                if (data.available) {
+                    usernameFeedback.textContent = "✅ Username is available";
+                    usernameFeedback.style.color = "green";
+                } else {
+                    usernameFeedback.textContent = "❌ Username is already taken";
+                    usernameFeedback.style.color = "red";
+                }
+            } catch (error) {
+                usernameFeedback.textContent = "⚠️ Error checking username";
+                usernameFeedback.style.color = "orange";
+            }
+        });
+
+        confirmPasswordField.addEventListener("input", function() {
+            if (passwordField.value !== confirmPasswordField.value) {
+                passwordFeedback.textContent = "Passwords do not match.";
+                passwordFeedback.style.color = "red";
+                submitButton.disabled = true;
+            } else {
+                passwordFeedback.textContent = "Passwords match.";
+                passwordFeedback.style.color = "green";
+                submitButton.disabled = false;
+            }
+        });
+
+        form.addEventListener("submit", function(event) {
+            if (passwordField.value !== confirmPasswordField.value) {
+                event.preventDefault();
+                alert("Passwords do not match!");
+            }
+        });
+    });
+</script>

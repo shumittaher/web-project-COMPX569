@@ -62,13 +62,12 @@ router.get("/create", async function (req, res) {
         "13.jpg",
     ]
 
-
     res.locals.message = req.query.message;
     res.render("account/create", {avatars:avatars});
 })
 router.post("/create", async function (req, res) {
-    const {username, fullName, password, dob, description} = req.body
-    const user = {username, fullName, password, dob, description}
+    const {username, fullName, password, dob, description, avatar} = req.body
+    const user = {username, fullName, password, dob, description, avatar}
 
     try {
         const daoResponse = await userDao.createUser(user);

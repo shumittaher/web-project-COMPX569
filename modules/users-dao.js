@@ -21,11 +21,11 @@ async function retrieveUserWithCredentials(username, password){
 async function createUser(user) {
     const db = await database;
 
-    const {username, fullName, password, dob, description} = user
+    const {username, fullName, password, dob, description, avatar} = user
 
     const result = await db.query(
-        "insert into project_users (username, fullName, password, dob, description) values (?, ?, ?, ?, ?)",
-        [username, fullName, password, dob, description]
+        "insert into project_users (username, fullName, password, dob, description, avatar) values (?, ?, ?, ?, ?, ?)",
+        [username, fullName, password, dob, description, avatar]
     );
 
     user.id = result.insertId;

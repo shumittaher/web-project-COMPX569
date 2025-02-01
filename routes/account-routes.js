@@ -47,22 +47,10 @@ router.get("/checkUserName", async function (req, res) {
 
 router.get("/create", async function (req, res) {
 
-    const avatars = [
-        "1.jpg",
-        "2.jpg",
-        "10.jpg",
-        "3.jpg",
-        "4.jpg",
-        "5.jpg",
-        "11.jpg",
-        "6.jpg",
-        "7.jpg",
-        "8.jpg",
-        "12.jpg",
-        "9.jpg",
-        "0.jpg",
-        "13.jpg",
-    ]
+    let avatars = []
+    for (i = 0; i < 14; i++) {
+        avatars[i] = `${i}.jpg`
+    }
 
     res.locals.message = req.query.message;
     res.render("account/create", {avatars:avatars});

@@ -1,8 +1,17 @@
 <div class="container">
 
+    <h1>Hello,
+
+    {{#if user}}
+        {{user.fullName}}
+        {{else}}
+        Guest User
+    {{/if}}
+
+    </h1>
+
     {{#if message}}
         <p>{{message}}</p>
     {{/if}}
-    <h1>Hello, Guest User</h1>
 
 </div >

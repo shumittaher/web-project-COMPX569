@@ -11,9 +11,7 @@ router.get("/", function (req, res){
 
 router.get("/home", function (req, res) {
     res.locals.user = req.session.user
-
     res.render("home", {message: "Welcome to the application!"});
-
 });
 
 module.exports = router;

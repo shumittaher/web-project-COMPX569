@@ -5,6 +5,13 @@ const userDao = require("../modules/users-dao.js");
 const {response} = require("express");
 
 
+router.get("/logout", function (req, res) {
+    if (req.session.user) {
+        delete req.session.user;
+    }
+    res.redirect("login?message=Successfully logged out!");
+})
+
 router.get("/login", async function (req, res) {
     res.locals.message = req.query.message;
     res.render("account/login");
@@ -13,7 +20,7 @@ router.get("/login", async function (req, res) {
 router.post("/login", async function (req, res) {
 
     const {username, password } = req.body
-    const user = await userDao.getUserByUsername(username, password )
+    const user = await userDao.retrieveUserWithCredentials(username, password)
 
     if (user) {
         req.session.user = user;

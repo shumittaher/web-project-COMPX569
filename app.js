@@ -23,6 +23,9 @@ const account = require("./routes/account-routes.js");
 app.use("/account", account);
 // TODO: Your app here
 
+const appRouter = require("./routes/application-routes.js");
+app.use(appRouter);
+
 
 app.listen(port, function () {
     console.log(`Web final project listening on http://localhost:${port}/`);

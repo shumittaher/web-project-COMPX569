@@ -14,4 +14,55 @@
         <p>{{message}}</p>
     {{/if}}
 
+    <div id="post_form_area" class="shadow rounded border bg-light">
+
+        <button id="post_form_collapse" data-bs-toggle="collapse" data-bs-target="#post_form_form" class="btn text-start btn-primary btn-lg py-4 px-3 w-100">
+            <span id="post_form_collapse_span" style="animation-direction:normal; width:100%" class="text-center d-inline-block">
+                New Post
+            </span>
+        </button>
+
+        <form id="post_form_form" action="" method="post" class = "bg-light collapse input_form">
+
+            <hr>
+
+            <div class="p-3" style="display: grid; row-gap: 1em;">
+
+
+
+            </div>
+
+            <input class="btn btn-primary btn-lg py-4" type="submit" value="Publish">
+        </form>
+
+    </div>
+
 </div >
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+        const post_form_collapse = document.querySelector('#post_form_collapse')
+        const post_form_collapse_span = document.querySelector('#post_form_collapse_span')
+
+        post_form_collapse.addEventListener('click', ()=>{
+
+            post_form_collapse.classList.toggle('btn-primary')
+            post_form_collapse_span.style.width = post_form_collapse_span.style.width==='100%'?'0%':'100%'
+            post_form_collapse_span.classList.toggle('animation_div_size')
+
+        })
+
+        post_form_collapse_span.addEventListener('animationend', ()=>{
+            post_form_collapse_span.classList.toggle('animation_div_size')
+            post_form_collapse_span.style.animationDirection = post_form_collapse_span.style.animationDirection==='normal'?'reverse':'normal'
+
+        })
+
+    });
+
+
+</script>
+
+

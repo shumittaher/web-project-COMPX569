@@ -98,17 +98,25 @@ router.post("/edit", middleware.verifyAuthenticated, async function (req, res) {
     res.redirect("/");
 })
 
-router.delete("delete", middleware.verifyAuthenticated, async function (req, res) {
+router.delete("/delete", middleware.verifyAuthenticated, async function (req, res) {
 
     if (req.session.user === null) {
+        console.log("hit")
+
         res.redirect("login?message=Please log in!");
     }
 
     try {
         const response = await userDao.deleteUser(req.session.user.id)
-        console.log(response)
-        req.session.destroy();
+
+        if (response.affectedRows > 0) {
+            req.session.destroy();
+            res.redirect("/");
+        } else {
+            res.redirect("edit?message=Account not found!");
+        }
     } catch (error) {
+        res.redirect("edit?message=Error Deleting the user!");
     }
 })
 

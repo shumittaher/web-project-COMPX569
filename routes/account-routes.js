@@ -105,11 +105,10 @@ router.delete("delete", middleware.verifyAuthenticated, async function (req, res
     }
 
     try {
-        await userDao.deleteUser(req.session.user.id)
+        const response = await userDao.deleteUser(req.session.user.id)
+        console.log(response)
         req.session.destroy();
-        res.status(200).json({ message: "Account deleted successfully" });
     } catch (error) {
-        res.status(500).json({ message: "Error deleting account" });
     }
 })
 

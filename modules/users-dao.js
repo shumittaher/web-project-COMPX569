@@ -8,6 +8,12 @@ async function getUserByUsername(username) {
     return result[0];
 }
 
+async function getUserByUserId(userId) {
+    const db = await database;
+    const result = await db.query("SELECT * FROM project_users WHERE id = ?", [userId]);
+    return result[0];
+}
+
 async function createUser(user) {
     const db = await database;
 
@@ -32,9 +38,23 @@ async function verifyPassword(inputPassword, storedHashedPassword) {
     return await bcrypt.compare(inputPassword, storedHashedPassword);
 }
 
+async function editUser(userData, userId) {
+    const {username, fullName, password, dob, description, avatar} = userData
+    const hashedPassword = await hashPassword(password);
+
+    const db = await database;
+
+    return await db.query(
+        "UPDATE project_users SET username = ?, fullName = ?, password = ?, dob = ?, description = ?, avatar = ? WHERE id = ?",
+        [username, fullName, hashedPassword, dob, description, avatar, userId]
+    );
+}
+
 
 module.exports = {
     getUserByUsername,
     createUser,
-    verifyPassword
+    verifyPassword,
+    editUser,
+    getUserByUserId
 }

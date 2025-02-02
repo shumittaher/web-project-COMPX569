@@ -1,6 +1,8 @@
 <div class="boxes border shadow w-100 mx-auto text-center">
 
-    <h2 class="mb-3">Register</h2>
+    <h2 class="mb-3">
+        {{#if isEdit}}Edit Profile{{else}}Register{{/if}}
+    </h2>
 
     {{#if message}}
         <p>{{message}}</p>
@@ -55,11 +57,21 @@
 
         </div>
 
-        <input class="btn btn-primary btn-lg mt-4" type="submit" value="✍️ Register">
+        <input class="btn btn-primary btn-lg mt-4" type="submit" value=
+            {{#if isEdit}}
+                "💾 Save Changes"
+            {{else}}
+                "✍️ Register"
+            {{/if}}
+
+        >
 
     </form>
     <small class="text-muted">
+        {{#if isEdit}}
+        {{else}}
         Already have an account? <a href="/account/login">Log In here.</a>
+        {{/if}}
     </small>
 
 </div>

@@ -20,6 +20,6 @@ CREATE TABLE IF NOT EXISTS project_articles
     parentArticleID int null,
     image_path VARCHAR(64),
     FOREIGN KEY (userid) REFERENCES project_users(id),
-    FOREIGN KEY (parentArticleID) REFERENCES project_articles(id) -- Self-referential link
+    FOREIGN KEY (parentArticleID) REFERENCES project_articles(id)
 )
 

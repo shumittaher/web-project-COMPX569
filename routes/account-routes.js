@@ -11,8 +11,9 @@ router.get("/logout", function (req, res) {
     if (req.session.user) {
         delete req.session.user;
         res.redirect("login?message=Successfully logged out!");
+    } else {
+        res.redirect("login?message=You are already logged out!");
     }
-    res.redirect("login?message=You are already logged out!");
 })
 
 router.get("/login", async function (req, res) {
@@ -24,7 +25,6 @@ router.post("/login", async function (req, res) {
 
     const {username, password } = req.body
     const user = await userDao.getUserByUsername(username)
-    console.log(user)
     if (!user) {
         res.redirect("login?message=Authentication failed!");
     } else {
@@ -36,7 +36,6 @@ router.post("/login", async function (req, res) {
             res.redirect("login?message=Authentication failed!");
         }
     }
-
 })
 
 router.get("/checkUserName", async function (req, res) {

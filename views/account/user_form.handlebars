@@ -84,6 +84,8 @@
         const form = document.querySelector("form");
         const submitButton = form.querySelector("input[type='submit']");
         const selectedAvatarInput = document.querySelector("#selectedAvatar");
+        const avatarImages = document.querySelectorAll(".avatar-img");
+
 
         const usernameFeedback = document.querySelector('#usernameFeedback');
         const passwordFeedback = document.querySelector('#passwordFeedback');
@@ -94,9 +96,34 @@
             element.style.color = color;
         }
 
+        const user = {{#if user}} {{{json user}}} {{else}} null {{/if}};
+
+        if (user) {
+            prefillEditBox()
+        }
+
+        function prefillEditBox() {
+            setInputValue(usernameField, user.username);
+            setInputValue(document.querySelector('input[name="fullName"]'), user.fullName);
+            setInputValue(document.querySelector('input[name="dob"]'), user.dob);
+            setInputValue(document.querySelector('textarea[name="description"]'), user.description);
+            avatarImages.forEach(img => {
+                if (img.getAttribute("data-avatar") === user.avatar) {
+                    img.style.outline = "3px solid lightpink";
+                    selectedAvatarInput.value = user.avatar;
+                }
+            });
+        }
+        function setInputValue(inputElement, value) {
+            if (inputElement) {
+                inputElement.value = value;
+                inputElement.style.backgroundColor = "#d4edda";
+            }
+        }
+
         usernameField.addEventListener("blur", async function () {
             const username = usernameField.value.trim();
-            if (username === "") {
+            if (username === "" || username === user.username) {
                 updateFeedback(usernameFeedback, "", "");
                 return;
             }
@@ -125,7 +152,6 @@
             }
         });
 
-        const avatarImages = document.querySelectorAll('.avatar-img');
         avatarImages.forEach(img => {
             img.addEventListener("click", function () {
                 avatarImages.forEach(i => i.style.outline = "none");

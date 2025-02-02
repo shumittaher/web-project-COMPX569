@@ -10,7 +10,13 @@ const port = process.env.EXPRESS_PORT || 3000;
 
 // Setup Handlebars
 app.engine("handlebars", handlebars.create({
-    defaultLayout: "main"
+    defaultLayout: "main",
+    helpers: {
+        json: function (context) {
+            return JSON.stringify(context, null, 2);
+        }
+    }
+
 }).engine);
 app.set("view engine", "handlebars");
 app.use("/bootstrap", express.static(__dirname + "/node_modules/bootstrap/dist"));

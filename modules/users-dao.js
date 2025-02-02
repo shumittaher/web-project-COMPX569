@@ -26,8 +26,8 @@ async function createUser(user) {
     );
 
     user.id = result.insertId;
-
     return user;
+
 }
 
 async function hashPassword(plainTextPassword) {

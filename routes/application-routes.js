@@ -16,10 +16,16 @@ router.get("/home", function (req, res) {
     res.render("home");
 });
 
-router.post("/new", middleware.verifyAuthenticated, function (req, res) {
-    const {title, content, image} = req.body;
-    messagesDao.postnew()
+router.post("/new", middleware.verifyAuthenticated, async function (req, res) {
 
+    const {title, content, image_path} = req.body;
+
+    const userid = req.session.user.id;
+    const parentArticleID = 0;
+
+    const result = await messagesDao.postnew({userid, title, content, parentArticleID, image_path})
+
+    res.redirect("/home");
 })
 
 module.exports = router;

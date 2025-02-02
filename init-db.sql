@@ -12,11 +12,14 @@ CREATE TABLE IF NOT EXISTS project_users
 
 CREATE TABLE IF NOT EXISTS project_articles
 (
-    id INT NOT NULL primary key auto_increment,
+    id INT primary key auto_increment,
     userid int not null,
     postTime datetime DEFAULT NOW(),
     title VARCHAR(32),
-    content TEXT,
-    parentArticleID int null
+    content TEXT not null ,
+    parentArticleID int null,
+    image_path VARCHAR(64),
+    FOREIGN KEY (userid) REFERENCES project_users(id),
+    FOREIGN KEY (parentArticleID) REFERENCES project_articles(id) -- Self-referential link
 )
 

@@ -8,5 +8,15 @@ CREATE TABLE IF NOT EXISTS project_users
     avatar VARCHAR(6) NOT NULL,
     dob DATE NOT NULL,
     description TEXT
+);
+
+CREATE TABLE IF NOT EXISTS project_articles
+(
+    id INT NOT NULL primary key auto_increment,
+    userid int not null,
+    postTime datetime DEFAULT NOW(),
+    title VARCHAR(32),
+    content TEXT,
+    parentArticleID int null
 )
 

@@ -98,6 +98,21 @@ router.post("/edit", middleware.verifyAuthenticated, async function (req, res) {
     res.redirect("/");
 })
 
+router.delete("delete", middleware.verifyAuthenticated, async function (req, res) {
+
+    if (req.session.user === null) {
+        res.redirect("login?message=Please log in!");
+    }
+
+    try {
+        await userDao.deleteUser(req.session.user.id)
+        req.session.destroy();
+        res.status(200).json({ message: "Account deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Error deleting account" });
+    }
+})
+
 function getAvatars() {
     let avatars = []
     for (i = 0; i < 14; i++) {

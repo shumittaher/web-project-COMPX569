@@ -50,11 +50,16 @@ async function editUser(userData, userId) {
     );
 }
 
+async function deleteUser(userId) {
+    const db = await database;
+    return await db.query("DELETE FROM users WHERE id = ?", [userId]);
+}
 
 module.exports = {
     getUserByUsername,
     createUser,
     verifyPassword,
     editUser,
-    getUserByUserId
+    getUserByUserId,
+    deleteUser
 }

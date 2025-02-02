@@ -24,14 +24,17 @@ router.post("/login", async function (req, res) {
 
     const {username, password } = req.body
     const user = await userDao.getUserByUsername(username)
-
-    const isMatch = await userDao.verifyPassword(password, user.password);
-
-    if (isMatch) {
-        req.session.user = user;
-        res.redirect("/");
-    } else {
+    console.log(user)
+    if (!user) {
         res.redirect("login?message=Authentication failed!");
+    } else {
+        const isMatch = await userDao.verifyPassword(password, user.password);
+        if (isMatch) {
+            req.session.user = user;
+            res.redirect("/");
+        } else {
+            res.redirect("login?message=Authentication failed!");
+        }
     }
 
 })

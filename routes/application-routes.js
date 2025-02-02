@@ -21,9 +21,8 @@ router.post("/new", middleware.verifyAuthenticated, async function (req, res) {
     const {title, content, image_path} = req.body;
 
     const userid = req.session.user.id;
-    const parentArticleID = 0;
 
-    const result = await messagesDao.postnew({userid, title, content, parentArticleID, image_path})
+    const result = await messagesDao.postNew({userid, title, content, image_path})
 
     res.redirect("/home");
 })

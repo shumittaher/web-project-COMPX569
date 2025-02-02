@@ -17,9 +17,15 @@ CREATE TABLE IF NOT EXISTS project_articles
     postTime datetime DEFAULT NOW(),
     title VARCHAR(32),
     content TEXT not null ,
-    parentArticleID int null,
     image_path VARCHAR(64),
-    FOREIGN KEY (userid) REFERENCES project_users(id),
-    FOREIGN KEY (parentArticleID) REFERENCES project_articles(id)
-)
+    FOREIGN KEY (userid) REFERENCES project_users(id)
+);
 
+CREATE TABLE IF NOT EXISTS project_article_parents
+(
+    article_id int not null,
+    parent_article_id int not null,
+    FOREIGN KEY (article_id) REFERENCES project_articles(id),
+    FOREIGN KEY (parent_article_id) REFERENCES project_articles(id),
+    PRIMARY KEY (article_id, parent_article_id)
+)

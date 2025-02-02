@@ -1,19 +1,25 @@
 const database = require("./database.js");
 
-async function postnew(articleData) {
+async function postNew(articleData) {
     const db = await database;
 
-    const {userid, title, content, parentArticleID, image_path} = articleData;
+    const {userid, title, content, image_path} = articleData;
 
-    const result = await db.query(
-        "insert into project_articles (userid, title, content, parentArticleID, image_path) values (?, ?, ?, ?, ?)",
-        [userid, title, content, parentArticleID, image_path]
+    const article_insert_result = await db.query(
+        "insert into project_articles (userid, title, content, image_path) values (?, ?, ?, ?)",
+        [userid, title, content, image_path]
     );
 
-    articleData.id = result.insertId;
+    articleData.id = article_insert_result.insertId;
+
+    const article_relation_id = await db.query(
+        "insert into project_article_parents (article_id, parent_article_id) values (?, ?)",
+        [articleData.id, articleData.id]
+    );
+
     return articleData;
 
 }
 module.exports = {
-    postnew,
+    postNew,
 }

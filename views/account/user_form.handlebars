@@ -57,14 +57,23 @@
 
         </div>
 
-        <input class="btn btn-primary btn-lg mt-4" type="submit" value=
-            {{#if isEdit}}
-                "💾 Save Changes"
-            {{else}}
-                "✍️ Register"
-            {{/if}}
+        <div class="row justify-content-center">
 
-        >
+            <div class="col-auto">
+                <input class="btn btn-primary btn-lg mt-4" type="submit" value=
+                    {{#if isEdit}}
+                        "💾 Save Changes"
+                    {{else}}
+                        "✍️ Register"
+                    {{/if}}
+                >
+            </div>
+            <div class="col-auto">
+                {{#if isEdit}}
+                    <button type="button" class="col btn btn-danger btn-lg mt-4">🗑️ Delete Account</button>
+                {{/if}}
+            </div>
+        </div>
 
     </form>
     <small class="text-muted">

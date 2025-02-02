@@ -26,11 +26,6 @@
     font-size: x-large;
 }
 
-#post_form_collapse_span {
-    font-size: x-large;
-    white-space: nowrap;
-}
-
 .animation_div_size{
     animation-name: div_size_animation;
     animation-duration: 0.5s;

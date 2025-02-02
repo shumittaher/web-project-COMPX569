@@ -1,5 +1,7 @@
 <div class="container">
 
+    <div class="text-center p-5">
+
     <h1>
         Hello,
 
@@ -14,13 +16,26 @@
         <p>{{message}}</p>
     {{/if}}
 
+    </div>
+
+
     <div id="post_form_area" class="shadow rounded border bg-light">
 
-        <button id="post_form_collapse" data-bs-toggle="collapse" data-bs-target="#post_form_form" class="btn text-start btn-primary btn-lg py-4 px-3 w-100">
-            <span id="post_form_collapse_span" style="animation-direction:normal; width:100%" class="text-center d-inline-block">
-               ✍️ New Post
-            </span>
-        </button>
+        {{#if user}}
+            <button id="post_form_collapse" data-bs-toggle="collapse" data-bs-target="#post_form_form" class="btn text-start btn-primary btn-lg py-4 px-3 w-100">
+                <span id="post_form_collapse_span" style="animation-direction:normal; width:100%" class="text-nowrap fs-3 text-center d-inline-block">
+                   ✍️ New Post
+                </span>
+            </button>
+        {{else}}
+            <a href="/account/login">
+                <button class="btn text-center btn-primary btn-lg py-4 px-3 w-100">
+                    <span class="fs-3">
+                       🔑 Please log in to post
+                    </span>
+                </button>
+            </a>
+        {{/if}}
 
         <form id="post_form_form" action="/new" method="post" class = "bg-light collapse input_form">
 

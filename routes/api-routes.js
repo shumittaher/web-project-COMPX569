@@ -89,4 +89,8 @@ router.put("/toggleLike/:articleId/:userId", async function (req, res) {
     }
 })
 
+router.get('/article/${articleId}', async function (req, res) {
+
+})
+
 module.exports = router;

@@ -14,7 +14,7 @@ router.post("/new", middleware.verifyAuthenticated, async function (req, res) {
     res.redirect("/home");
 })
 
-router.get("/showArticles", async function (req, res) {
+router.post("/showArticles", async function (req, res) {
 
     try {
         const articles = await articlesDao.getArticles();

@@ -85,9 +85,9 @@
 
 <script>
 
-    document.addEventListener('DOMContentLoaded', function() {
+    let onlyMineState = false;
 
-        const article_area = document.querySelector('#articles_area')
+    document.addEventListener('DOMContentLoaded', function() {
 
         {{#if user}}
 
@@ -109,22 +109,38 @@
             })
         {{/if}}
 
+        const article_area = document.querySelector('#articles_area')
+        const onlyMineSwitch = document.querySelector('#myPostOnlySwitch')
+        onlyMineSwitch.addEventListener('click', ()=>{
+            onlyMineState = onlyMineSwitch.checked;
+            fetchArticles(article_area);
+        })
 
-            async function fetchArticles() {
-
-            try {
-                const response = await fetch('/api/showArticles');
-                article_area.innerHTML = await response.text();
-
-            } catch (error) {
-                article_area.innerHTML = 'Error fetching articles:';
-            }
-        }
-
-        fetchArticles();
+        fetchArticles(article_area);
 
     });
 
+    async function fetchArticles(wheretoPut) {
+
+        try {
+            const response = await fetch('/api/showArticles', {
+                method: 'POST',
+                headers: {
+                },
+                body: JSON.stringify(getFilters())
+            });
+            wheretoPut.innerHTML = await response.text();
+
+        } catch (error) {
+            wheretoPut.innerHTML = 'Error fetching articles: ' + error
+        }
+    }
+
+    function getFilters() {
+        return {
+            'onlyMine': onlyMineState
+        }
+    }
 
 </script>
 

@@ -12,11 +12,6 @@ async function postNew(articleData) {
 
     articleData.id = article_insert_result.insertId;
 
-    const article_relation_id = await db.query(
-        "insert into project_article_parents (article_id, parent_article_id) values (?, ?)",
-        [articleData.id, articleData.id]
-    );
-
     return articleData;
 }
 
@@ -129,18 +124,19 @@ async function postNewComment(commentData) {
     const {userid, commentContent, parent_id} = commentData;
 
     const article_insert_result = await db.query(
-        "insert into project_articles (userid, content) values (?, ?)",
-        [userid, commentContent]
+        "insert into project_articles (userid, content, parent_article_id) values (?, ?, ?)",
+        [userid, commentContent, parent_id]
     );
 
     commentData.id = article_insert_result.insertId;
 
-    const article_relation_id = await db.query(
-        "insert into project_article_parents (article_id, parent_article_id) values (?, ?)",
-        [commentData.id, parent_id]
-    );
-
     return commentData;
+}
+
+async function getCommentsOnArticle(article_id) {
+    const db = await database;
+
+    await db.query("SELECT * from project_articles WHERE article_id = ?", [article_id]);
 }
 
 
@@ -152,5 +148,6 @@ module.exports = {
     deleteUserLike,
     getArticleById,
     updateArticle,
-    postNewComment
+    postNewComment,
+    getCommentsOnArticle
 }

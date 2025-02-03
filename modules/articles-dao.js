@@ -94,10 +94,20 @@ async function deleteUserLike(article_id, userid) {
     return result.affectedRows > 0;
 }
 
+async function getArticleById(article_id) {
+    const db = await database;
+    const result = await db.query(
+        "Select * from project_articles where id = ?", [article_id],
+    )
+
+    return result[0]
+}
+
 module.exports = {
     postNew,
     getArticles,
     getUserLikesArticle,
     setUserLikesArticle,
-    deleteUserLike
+    deleteUserLike,
+    getArticleById
 }

@@ -89,7 +89,12 @@ router.put("/toggleLike/:articleId/:userId", async function (req, res) {
     }
 })
 
-router.get('/article/${articleId}', async function (req, res) {
+router.get('/article/:articleId', async function (req, res) {
+    const { articleId } = req.params;
+
+    const result = await articlesDao.getArticleById(articleId)
+
+    res.json(result);
 
 })
 

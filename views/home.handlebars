@@ -38,7 +38,7 @@
         {{/if}}
 
         <div id="post_form_form" class="collapse">
-            {{> articleForm route='/api/new'}}
+            {{> articleForm existingArticle=false}}
         </div>
     </div>
 
@@ -84,7 +84,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                {{> articleForm route='' existingArticle='' }}
+                {{> articleForm existingArticle=true }}
             </div>
         </div>
     </div>
@@ -245,8 +245,15 @@
 
     })
 
-    function editClicked(articleId, userId) {
-        console.log('hit' + articleId, userId);
+    async function editClicked(articleId, userId) {
+
+        const response = await fetch(`/api/article/${articleId}`);
+        const article = await response.json();
+        const {title, content} = article
+
+        document.querySelector("#edittitle").value = title || ""
+        document.querySelector("#editcontent").value = content || ""
+        document.querySelector("#editArticleId").value = articleId
 
         const editModal = new bootstrap.Modal(document.querySelector("#editArticleModal"));
         editModal.show();

@@ -37,7 +37,23 @@ CREATE TABLE IF NOT EXISTS project_article_likes
     FOREIGN KEY (article_id) REFERENCES project_articles (id) ON DELETE CASCADE,
     FOREIGN KEY (userid) REFERENCES project_users (id) ON DELETE CASCADE,
     PRIMARY KEY (article_id, userid)
-)
+);
 
 
 
+SELECT
+    project_articles.id AS article_id,
+    project_articles.title,
+    project_articles.userid,
+    project_articles.content,
+    project_articles.image_path,
+    project_articles.postTime,
+    project_users.username,
+    project_users.fullName,
+    project_users.avatar,
+    COUNT(project_article_likes.userid) as likeCount
+FROM project_articles
+         LEFT JOIN project_users ON project_articles.userid = project_users.id
+         LEFT JOIN project_article_likes ON project_articles.id = project_article_likes.article_id
+WHERE project_articles.userid = 2
+GROUP BY project_articles.id

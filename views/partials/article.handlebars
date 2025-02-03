@@ -11,7 +11,7 @@
     </div>
 
     {{#if this.currentUserID}}
-    <div class="card-footer">
+    <div class="card-footer d-flex justify-content-between">
         <div id="like-status-{{this.article_id}}" class="d-flex align-items-center opacity-0 likeButtonsBox">
             <button data-likeAction="true" class="btn btn-outline-primary addLikeButton">
                 <span>👍</span>
@@ -22,8 +22,11 @@
                 <span>Liked</span>
             </button>
         </div>
-    </div>
 
+        <div>
+            edit button
+        </div>
+    </div>
     {{/if}}
 </div>
 

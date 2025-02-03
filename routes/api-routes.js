@@ -67,4 +67,29 @@ router.get("/getUserLikeStatus/:articleId/:userId", async function (req, res) {
 
 })
 
+router.put("/toggleLike/:articleId/:userId", async function (req, res) {
+    const { articleId, userId } = req.params;
+    if (!articleId || !userId) {
+        return res.status(400).json({ error: "Missing articleId or userId" });
+    }
+
+    let result
+    try {
+        const userLikedThis = await articlesDao.getUserLikesArticle(articleId, userId);
+        console.log("user", userId, articleId);
+        console.log("userLikedThis", userLikedThis);
+        console.log("userDidnotLikedThis", !userLikedThis);
+
+        if (!userLikedThis) {
+            result = await articlesDao.setUserLikesArticle(articleId, userId);
+        } else {
+            result = await articlesDao.deleteUserLike(articleId, userId);
+        }
+
+        res.json({ success: result });
+    } catch (error) {
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+})
+
 module.exports = router;

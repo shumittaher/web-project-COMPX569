@@ -12,7 +12,7 @@
 
     {{#if this.currentUserID}}
     <div class="card-footer">
-        <div id="like-status-{{this.article_id}}" class="d-flex align-items-center opacity-0">
+        <div id="like-status-{{this.article_id}}" class="d-flex align-items-center opacity-0 likeButtonsBox">
             <button data-likeAction="true" class="btn btn-outline-primary addLikeButton">
                 <span>👍</span>
                 <span>Like</span>
@@ -23,6 +23,10 @@
             </button>
         </div>
     </div>
-        {{else}}
+
     {{/if}}
 </div>
+
+{{this.article_id}}
+{{this.userid}}
+{{this.currentUserID}}

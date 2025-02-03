@@ -62,13 +62,44 @@ async function getUserLikesArticle(article_id, userid) {
                 FROM project_article_likes 
                 WHERE article_id = ? AND userid = ?
         `, [article_id, userid])
+    console.log(results);
 
-    return results.count > 0;
+    return results.length > 0;
 
+}
+
+async function setUserLikesArticle(article_id, userid) {
+    const db = await database;
+
+    const result = await db.query(
+        "insert into project_article_likes (article_id, userid) values (?, ?)",
+        [article_id, userid]
+    );
+
+    console.log(result);
+
+    return result.count > 0;
+}
+
+async function deleteUserLike(article_id, userid) {
+
+    console.log(article_id, userid);
+    const db = await database;
+
+    const result = await db.query(
+        "DELETE FROM project_article_likes WHERE article_id = ? AND userid = ?",
+        [article_id, userid]
+    );
+
+    console.log(result);
+
+    return result.count > 0;
 }
 
 module.exports = {
     postNew,
     getArticles,
-    getUserLikesArticle
+    getUserLikesArticle,
+    setUserLikesArticle,
+    deleteUserLike
 }

@@ -203,34 +203,56 @@
         const articleCards = document.querySelectorAll('.articlesCard');
         {{#if user}}
             updateLikeButtons(articleCards);
+
+
+            function updateLikeButtons(articleCards) {
+                articleCards.forEach(async function(articleCard) {
+
+                    const articleID = articleCard.dataset.articleId
+                    const userID = {{user.id}}
+
+                    const response = await fetchLikeStatus(articleID, userID)
+                    const isLiked = response.userLikedThis
+                    setLiked(articleID, isLiked)
+
+                    document.querySelectorAll(`#like-status-${articleID} button`).forEach( (button)=> {
+                        button.addEventListener('click', function() {
+                            toggleLike(articleID, userID)
+                        })
+                    })
+                })
+            }
+
+            function setLiked(articleID, isLiked) {
+                const likeButton = document.querySelector(`#like-status-${articleID} .addLikeButton`);
+                const removeLikeButton = document.querySelector(`#like-status-${articleID} .removeLikeButton`)
+
+                if (isLiked) {
+                    likeButton.classList.add('d-none')
+                    removeLikeButton.classList.remove('d-none')
+                } else {
+                    likeButton.classList.remove('d-none')
+                    removeLikeButton.classList.add('d-none')
+                }
+
+                document.querySelector(`#like-status-${articleID}`).classList.remove('opacity-0')
+            }
+
+            async function toggleLike(articleID, userID) {
+                const response = await fetch(`/api/toggleLike/${articleID}/${userID}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+
+                console.log(response)
+            }
+
+
         {{/if}}
 
     })
-
-    function updateLikeButtons(articleCards) {
-        articleCards.forEach(async function(articleCard) {
-
-            const articleID = articleCard.dataset.articleId
-            const userID = articleCard.dataset.userId
-
-            const response = await fetchLikeStatus(articleID, userID)
-            const isLiked = response.userLikedThis
-            setLiked(articleID, isLiked)
-        })
-    }
-
-
-    function setLiked(articleID, isLiked) {
-        if (isLiked) {
-            document.querySelector(`#like-status-${articleID} .addLikeButton`).classList.add('d-none')
-            document.querySelector(`#like-status-${articleID} .removeLikeButton`).classList.remove('d-none')
-        } else {
-            document.querySelector(`#like-status-${articleID} .addLikeButton`).classList.remove('d-none')
-            document.querySelector(`#like-status-${articleID} .removeLikeButton`).classList.add('d-none')
-        }
-
-        document.querySelector(`#like-status-${articleID}`).classList.remove('opacity-0')
-    }
 </script>
 
 

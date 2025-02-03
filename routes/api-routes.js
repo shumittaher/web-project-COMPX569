@@ -17,8 +17,7 @@ router.post("/new", middleware.verifyAuthenticated, async function (req, res) {
 router.get("/showArticles", async function (req, res) {
 
     const results = await articlesDao.getArticles()
-    console.log("results"+results)
-
+    return res.json(results)
 })
 
 module.exports = router;

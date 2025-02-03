@@ -16,8 +16,14 @@ router.post("/new", middleware.verifyAuthenticated, async function (req, res) {
 
 router.post("/showArticles", async function (req, res) {
 
+    const filters = req.body.filters;
+
+    if (filters.filterByUser) {
+        filters.filterUserId = req.session.user.id;
+    }
+
     try {
-        const articles = await articlesDao.getArticles();
+        const articles = await articlesDao.getArticles(filters);
 
         res.render("partials/articles", { articles , layout:false}, function (err, renderedArticles) {
             if (err) {

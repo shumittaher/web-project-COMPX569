@@ -70,10 +70,12 @@
 </div>
 <div class="bg-body-tertiary p-4 d-flex align-items-center justify-content-between">
 
-    <div class="form-check form-switch d-flex align-items-center">
-        <input id="myPostOnlySwitch" class="me-3 form-check-input" type="checkbox">
-        <label class="form-check-label fs-5" for="myPostOnlySwitch">My Articles Only</label>
-    </div>
+    {{#if user}}
+        <div class="form-check form-switch d-flex align-items-center">
+            <input id="myPostOnlySwitch" class="me-3 form-check-input" type="checkbox">
+            <label class="form-check-label fs-5" for="myPostOnlySwitch">My Articles Only</label>
+        </div>
+    {{/if}}
 
 </div>
 <div class="p-3 bg-body-secondary rounded-3 rounded-top-0">
@@ -107,14 +109,17 @@
                 post_form_collapse_span.style.animationDirection = post_form_collapse_span.style.animationDirection==='normal'?'reverse':'normal'
 
             })
+
+            const onlyMineSwitch = document.querySelector('#myPostOnlySwitch')
+            onlyMineSwitch.addEventListener('click', ()=>{
+                onlyMineState = onlyMineSwitch.checked;
+                fetchArticles(article_area);
+            })
+
         {{/if}}
 
         const article_area = document.querySelector('#articles_area')
-        const onlyMineSwitch = document.querySelector('#myPostOnlySwitch')
-        onlyMineSwitch.addEventListener('click', ()=>{
-            onlyMineState = onlyMineSwitch.checked;
-            fetchArticles(article_area);
-        })
+
 
         fetchArticles(article_area);
 
@@ -122,12 +127,15 @@
 
     async function fetchArticles(wheretoPut) {
 
+        const filters = getFilters()
+
         try {
             const response = await fetch('/api/showArticles', {
                 method: 'POST',
                 headers: {
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(getFilters())
+                body: JSON.stringify({filters})
             });
             wheretoPut.innerHTML = await response.text();
 
@@ -138,7 +146,7 @@
 
     function getFilters() {
         return {
-            'onlyMine': onlyMineState
+            'filterByUser': onlyMineState
         }
     }
 

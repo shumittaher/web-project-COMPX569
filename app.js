@@ -42,7 +42,9 @@ app.use(session({
 // Setup our routes
 const account = require("./routes/account-routes.js");
 app.use("/account", account);
-// TODO: Your app here
+
+const api = require("./routes/api-routes.js");
+app.use("/api", api);
 
 const appRouter = require("./routes/application-routes.js");
 app.use(appRouter);

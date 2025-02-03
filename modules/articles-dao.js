@@ -22,14 +22,14 @@ async function postNew(articleData) {
 
 async function getArticles(filters) {
     const db = await database;
-    const {filterByUser, filterUserId} = filters
 
     console.log(filterByUser, filterUserId);
 
     let query =
         `SELECT 
                 project_articles.id AS article_id, 
-                project_articles.title, 
+                project_articles.title,
+                project_articles.userid,
                 project_articles.content, 
                 project_articles.image_path, 
                 project_articles.postTime, 
@@ -37,10 +37,10 @@ async function getArticles(filters) {
                 project_users.fullName, 
                 project_users.avatar 
             FROM project_articles LEFT JOIN project_users 
-                ON project_articles.userid = project_users.id`
+                ON project_articles.userid = project_users.id `
 
     if (filterByUser) {
-        query += `WHERE project_articles.userid = ${filterUserId}`;
+        query += ` WHERE project_articles.userid = ${filterUserId} `;
     }
     return await db.query(
         query

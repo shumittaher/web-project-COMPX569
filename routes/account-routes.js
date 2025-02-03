@@ -103,8 +103,6 @@ router.post("/edit", middleware.verifyAuthenticated, async function (req, res) {
 router.delete("/delete", middleware.verifyAuthenticated, async function (req, res) {
 
     if (req.session.user === null) {
-        console.log("hit")
-
         res.redirect("login?message=Please log in!");
     }
 

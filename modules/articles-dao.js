@@ -62,7 +62,6 @@ async function getUserLikesArticle(article_id, userid) {
                 FROM project_article_likes 
                 WHERE article_id = ? AND userid = ?
         `, [article_id, userid])
-    console.log(results);
 
     return results.length > 0;
 
@@ -76,14 +75,11 @@ async function setUserLikesArticle(article_id, userid) {
         [article_id, userid]
     );
 
-    console.log(result);
-
-    return result.count > 0;
+    return result.affectedRows > 0;
 }
 
 async function deleteUserLike(article_id, userid) {
 
-    console.log(article_id, userid);
     const db = await database;
 
     const result = await db.query(
@@ -91,9 +87,7 @@ async function deleteUserLike(article_id, userid) {
         [article_id, userid]
     );
 
-    console.log(result);
-
-    return result.count > 0;
+    return result.affectedRows > 0;
 }
 
 module.exports = {

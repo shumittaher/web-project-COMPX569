@@ -42,3 +42,7 @@
         width: 0%;
     }
 }
+
+.likeButtonsBox button{
+    width: 6rem;
+}

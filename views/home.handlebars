@@ -201,7 +201,13 @@
     document.addEventListener('ArticlesLoaded', function() {
 
         const articleCards = document.querySelectorAll('.articlesCard');
+        {{#if user}}
+            updateLikeButtons(articleCards);
+        {{/if}}
 
+    })
+
+    function updateLikeButtons(articleCards) {
         articleCards.forEach(async function(articleCard) {
 
             const articleID = articleCard.dataset.articleId
@@ -210,9 +216,8 @@
             const response = await fetchLikeStatus(articleID, userID)
             const isLiked = response.userLikedThis
             setLiked(articleID, isLiked)
-
         })
-    })
+    }
 
 
     function setLiked(articleID, isLiked) {

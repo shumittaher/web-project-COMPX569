@@ -19,6 +19,11 @@ router.post("/showArticles", async function (req, res) {
     const {filters} = req.body;
     const {sorts} = req.body;
 
+    let currentUserID = null
+    if (req.session.user != null) {
+        currentUserID = req.session.user.id
+    }
+
     if (filters.filterByUser) {
         filters.filterUserId = req.session.user.id;
     }
@@ -26,7 +31,14 @@ router.post("/showArticles", async function (req, res) {
     try {
         const articles = await articlesDao.getArticles(filters, sorts);
 
-        res.render("partials/articles", { articles , layout:false}, function (err, renderedArticles) {
+        const articlesWithUserID = articles.map(article => {
+            return {
+                ...article,
+                currentUserID: currentUserID
+            };
+        });
+
+        res.render("partials/articles", { articlesWithUserID , layout:false}, function (err, renderedArticles) {
             if (err) {
                 console.error("Error rendering articles partial:", err);
                 return res.status(500).send("Error rendering articles");

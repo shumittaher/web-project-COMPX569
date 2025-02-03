@@ -9,6 +9,8 @@
             <img src="{{this.image_path}}" alt="Article Image" class="img-fluid mb-3">
         {{/if}}
     </div>
+
+    {{#if this.currentUserID}}
     <div class="card-footer">
         <div id="like-status-{{this.article_id}}" class="d-flex align-items-center opacity-0">
             <button data-likeAction="true" class="btn btn-outline-primary addLikeButton">
@@ -21,4 +23,6 @@
             </button>
         </div>
     </div>
+        {{else}}
+    {{/if}}
 </div>

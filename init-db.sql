@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS project_article_parents
 CREATE TABLE IF NOT EXISTS project_article_likes
 (
     article_id int not null,
-    userid     int not null,
+    userid int not null,
     FOREIGN KEY (article_id) REFERENCES project_articles (id) ON DELETE CASCADE,
     FOREIGN KEY (userid) REFERENCES project_users (id) ON DELETE CASCADE,
     PRIMARY KEY (article_id, userid)

@@ -40,4 +40,8 @@ router.post("/showArticles", async function (req, res) {
     }
 })
 
+router.get("getUserLikeStatus/:articleId/:userId", async function (req, res) {
+
+})
+
 module.exports = router;

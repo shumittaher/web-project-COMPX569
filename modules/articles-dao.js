@@ -28,17 +28,20 @@ async function getArticles(filters, sorts) {
 
     let query =
         `SELECT 
-                project_articles.id AS article_id, 
-                project_articles.title,
-                project_articles.userid,
-                project_articles.content, 
-                project_articles.image_path, 
-                project_articles.postTime, 
-                project_users.username, 
-                project_users.fullName, 
-                project_users.avatar 
-            FROM project_articles LEFT JOIN project_users 
-                ON project_articles.userid = project_users.id `
+            project_articles.id AS article_id, 
+            project_articles.title,
+            project_articles.userid,
+            project_articles.content, 
+            project_articles.image_path, 
+            project_articles.postTime, 
+            project_users.username, 
+            project_users.fullName, 
+            project_users.avatar,
+            COUNT(project_article_likes.userid) as likeCount
+        FROM project_articles  
+        LEFT JOIN project_users ON project_articles.userid = project_users.id 
+        LEFT JOIN project_article_likes ON project_articles.id = project_article_likes.article_id 
+        GROUP BY project_articles.id `
 
     if (filterByUser) {
         query += ` WHERE project_articles.userid = ${filterUserId} `;
@@ -51,6 +54,16 @@ async function getArticles(filters, sorts) {
     )
 }
 
+async function getUserLikesArticle(article_id, userid) {
+    const db = await database;
+
+    return await db.query(
+        ` SELECT EXISTS (
+                SELECT 1 
+                FROM project_article_likes 
+                WHERE article_id = ? AND userid = ?
+            ) AS entryExists;`, [article_id, userid])
+}
 
 module.exports = {
     postNew,

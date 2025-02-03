@@ -201,6 +201,7 @@
     document.addEventListener('ArticlesLoaded', function() {
 
         const articleCards = document.querySelectorAll('.articlesCard');
+
         articleCards.forEach(async function(articleCard) {
 
             const articleID = articleCard.dataset.articleId
@@ -210,9 +211,7 @@
             const isLiked = response.userLikedThis
             if (isLiked) {
 
-
             }
-
         })
     })
 

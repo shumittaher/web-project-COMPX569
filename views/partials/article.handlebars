@@ -9,4 +9,12 @@
             <img src="{{this.image_path}}" alt="Article Image" class="img-fluid mb-3">
         {{/if}}
     </div>
+    <div class="card-footer">
+        <div id="like-status-{{this.article_id}}" class="like-status d-flex align-items-center">
+            <button id="like-button-{{this.article_id}}" class="btn btn-outline-primary">
+                <span id="like-icon-{{this.article_id}}">👍</span>
+                <span id="like-text-{{this.article_id}}">Like</span>
+            </button>
+        </div>
+    </div>
 </div>

@@ -22,7 +22,9 @@ async function postNew(articleData) {
 
 async function getArticles(filters, sorts) {
     const db = await database;
-    const {filterByUser, filterUserId} = filters
+
+    const { filterByUser, filterUserId } = filters
+    const { sortSelectState, sortTypeState } = sorts;
 
     let query =
         `SELECT 
@@ -40,6 +42,9 @@ async function getArticles(filters, sorts) {
 
     if (filterByUser) {
         query += ` WHERE project_articles.userid = ${filterUserId} `;
+    }
+    if (sortSelectState !== '') {
+        query += ` ORDER BY ${sortSelectState} ${sortTypeState} `;
     }
     return await db.query(
         query

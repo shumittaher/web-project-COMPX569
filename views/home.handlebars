@@ -79,20 +79,24 @@
         <div></div>
     {{/if}}
 
-    <div class="w-25">
-        <label class="d-none" for="sortSelect">Sort by</label>
-        <select id="sortSelect" class="form-select">
-            <option value="">Sort by</option>
-            <option value="title">Title</option>
-            <option value="username">Username</option>
-            <option value="date">Date</option>
-        </select>
+    <div class="d-flex align-items-center justify-content-end w-25">
+            <select id="sortSelect" class="form-select">
+                <option value="">Sort by</option>
+                <option value="title">Title</option>
+                <option value="username">Name</option>
+                <option value="postTime">Date</option>
+            </select>
+            <select id="sortType" class="form-select ms-2">
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
+            </select>
     </div>
 
 </div>
 <div class="p-3 bg-body-secondary rounded-3 rounded-top-0">
 
-    <div id="articles_area" style="display: grid; row-gap: 1em;">
+    <div id="articles_area">
+
     </div>
 
 </div >
@@ -100,6 +104,8 @@
 <script>
 
     let onlyMineState = false;
+    let sortSelectState = "";
+    let sortTypeState = "asc";
 
     document.addEventListener('DOMContentLoaded', function() {
 
@@ -131,9 +137,21 @@
         {{/if}}
 
         const article_area = document.querySelector('#articles_area')
+        const sort_select = document.querySelector('#sortSelect')
+        sort_select.addEventListener('change', ()=>{
+            sortSelectState = sort_select.value
+            fetchArticles(article_area);
 
+        })
+        const sort_type = document.querySelector('#sortType')
+        sort_type.addEventListener('change', ()=>{
+            sortTypeState = sort_type.value
+            fetchArticles(article_area);
+
+        })
 
         fetchArticles(article_area);
+
 
     });
 
@@ -168,7 +186,8 @@
 
     function getSorts() {
         return {
-
+            sortSelectState: sortSelectState,
+            sortTypeState: sortTypeState
         }
     }
 

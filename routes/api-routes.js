@@ -35,12 +35,23 @@ router.post("/showArticles", async function (req, res) {
         });
 
     } catch (error) {
-        console.error("Error fetching articles:", error);
         res.status(500).json({ error: "Failed to fetch articles" });
     }
 })
 
-router.get("getUserLikeStatus/:articleId/:userId", async function (req, res) {
+router.get("/getUserLikeStatus/:articleId/:userId", async function (req, res) {
+    const { articleId, userId } = req.params;
+
+    if (!articleId || !userId) {
+        return res.status(400).json({ error: "Missing articleId or userId" });
+    }
+
+    try {
+        const userLikedThis = await articlesDao.getUserLikesArticle(articleId, userId);
+        res.json({ userLikedThis: userLikedThis });
+    } catch (error) {
+        res.status(500).json({ error: "Internal Server Error" });
+    }
 
 })
 

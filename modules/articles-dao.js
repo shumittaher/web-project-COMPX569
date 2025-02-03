@@ -57,15 +57,18 @@ async function getArticles(filters, sorts) {
 async function getUserLikesArticle(article_id, userid) {
     const db = await database;
 
-    return await db.query(
-        ` SELECT EXISTS (
-                SELECT 1 
+    const results = await db.query(
+        ` SELECT * 
                 FROM project_article_likes 
                 WHERE article_id = ? AND userid = ?
-            ) AS entryExists;`, [article_id, userid])
+        `, [article_id, userid])
+
+    return results.count > 0;
+
 }
 
 module.exports = {
     postNew,
-    getArticles
+    getArticles,
+    getUserLikesArticle
 }

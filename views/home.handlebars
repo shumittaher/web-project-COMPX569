@@ -106,6 +106,8 @@
     let onlyMineState = false;
     let sortSelectState = "";
     let sortTypeState = "asc";
+    let articlesLoadedEvent = new CustomEvent('ArticlesLoaded');
+
 
     document.addEventListener('DOMContentLoaded', function() {
 
@@ -151,8 +153,6 @@
         })
 
         fetchArticles(article_area);
-
-
     });
 
     async function fetchArticles(wheretoPut) {
@@ -172,10 +172,17 @@
                 })
             });
             wheretoPut.innerHTML = await response.text();
+            document.dispatchEvent(articlesLoadedEvent);
+
 
         } catch (error) {
             wheretoPut.innerHTML = 'Error fetching articles: ' + error
         }
+    }
+
+    async function fetchLikeStatus(articleId, userId){
+        const response = await fetch(`/api/getUserLikeStatus/${articleId}/${userId}`)
+        return await response.json();
     }
 
     function getFilters() {
@@ -190,6 +197,25 @@
             sortTypeState: sortTypeState
         }
     }
+
+    document.addEventListener('ArticlesLoaded', function() {
+
+        const articleCards = document.querySelectorAll('.articlesCard');
+        articleCards.forEach(async function(articleCard) {
+
+            const articleID = articleCard.dataset.articleId
+            const userID = articleCard.dataset.userId
+
+            const response = await fetchLikeStatus(articleID, userID)
+            const isLiked = response.userLikedThis
+            if (isLiked) {
+
+
+            }
+
+        })
+    })
+
 
 </script>
 

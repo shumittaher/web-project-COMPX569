@@ -18,8 +18,20 @@ async function postNew(articleData) {
     );
 
     return articleData;
-
 }
+
+async function getArticles() {
+    const db = await database;
+
+    const articles_result = await db.query(
+        "SELECT * FROM project_articles LEFT JOIN project_users ON project_articles.userid = project_users.id",
+    )
+
+    return articles_result.rows;
+}
+
+
 module.exports = {
     postNew,
+    getArticles
 }

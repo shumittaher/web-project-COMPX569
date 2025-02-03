@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const middleware = require("../middleware/auth");
-const messagesDao = require("../modules/posts-dao");
+const articlesDao = require("../modules/articles-dao");
 
 
 router.post("/new", middleware.verifyAuthenticated, async function (req, res) {
@@ -11,13 +11,15 @@ router.post("/new", middleware.verifyAuthenticated, async function (req, res) {
 
     const userid = req.session.user.id;
 
-    const result = await messagesDao.postNew({userid, title, content, image_path})
+    const result = await articlesDao.postNew({userid, title, content, image_path})
 
     res.redirect("/home");
 })
 
-router.get("/showArticles", function (req, res) {
+router.get("/showArticles", async function (req, res) {
 
+    const results = await articlesDao.getArticles()
+    console.log("results"+results)
 
 })
 

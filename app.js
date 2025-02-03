@@ -4,6 +4,8 @@ require('dotenv').config()
 const express = require("express");
 const handlebars = require("express-handlebars");
 const app = express();
+const path = require("path");
+
 
 // Listen port will be loaded from .env file, or use 3000
 const port = process.env.EXPRESS_PORT || 3000;
@@ -15,21 +17,20 @@ app.engine("handlebars", handlebars.create({
         json: function (context) {
             return JSON.stringify(context, null, 2);
         }
-    }
-
+    },
+    partialsDir: path.join(__dirname, 'views/partials'),
 }).engine);
+
 app.set("view engine", "handlebars");
 app.use("/bootstrap", express.static(__dirname + "/node_modules/bootstrap/dist"));
 
-
-const path = require("path");
 app.use("/public", express.static(path.join(__dirname, "public")));
-
 
 // Set up to read POSTed form data
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({}));
 
+// Session
 const session = require("express-session");
 app.use(session({
     resave: false,

@@ -79,7 +79,7 @@
         <div></div>
     {{/if}}
 
-    <div class="d-flex align-items-center justify-content-end w-25">
+    <div class="d-flex align-items-center justify-content-end w-50">
             <select id="sortSelect" class="form-select">
                 <option value="">Sort by</option>
                 <option value="title">Title</option>
@@ -255,6 +255,10 @@
         {{/if}}
 
     })
+
+    function editClicked(articleId, userId) {
+        console.log('hit' + articleId, userId);
+    }
 </script>
 
 

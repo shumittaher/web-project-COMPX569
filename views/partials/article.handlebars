@@ -10,7 +10,7 @@
         {{/if}}
     </div>
 
-    {{#if this.currentUserID}}
+    {{#if this.userLoggedIn}}
     <div class="card-footer d-flex justify-content-between">
         <div id="like-status-{{this.article_id}}" class="d-flex align-items-center opacity-0 likeButtonsBox">
             <button data-likeAction="true" class="btn btn-outline-primary addLikeButton">
@@ -23,13 +23,15 @@
             </button>
         </div>
 
-        <div>
-            edit button
+        {{#if this.isAuthor}}
+        <div class="editBox">
+            <button onClick="editClicked({{this.article_id}}, {{this.userid}})" class="btn btn-danger">
+                Edit This
+            </button>
         </div>
+        {{/if}}
+
     </div>
+
     {{/if}}
 </div>
-
-{{this.article_id}}
-{{this.userid}}
-{{this.currentUserID}}

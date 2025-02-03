@@ -34,7 +34,8 @@ router.post("/showArticles", async function (req, res) {
         const articlesWithUserID = articles.map(article => {
             return {
                 ...article,
-                currentUserID: currentUserID
+                userLoggedIn: currentUserID,
+                isAuthor: article.userid === currentUserID
             };
         });
 

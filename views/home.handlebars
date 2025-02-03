@@ -76,6 +76,20 @@
 
 </div >
 
+<div class="modal fade" id="editArticleModal" tabindex="-1" aria-labelledby="editArticleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editArticleModalLabel">Edit Article</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+               form Here
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 
     let onlyMineState = false;
@@ -233,6 +247,10 @@
 
     function editClicked(articleId, userId) {
         console.log('hit' + articleId, userId);
+
+        const editModal = new bootstrap.Modal(document.querySelector("#editArticleModal"));
+        editModal.show();
+
     }
 </script>
 

@@ -16,7 +16,7 @@ router.post("/new", middleware.verifyAuthenticated, async function (req, res) {
 
 router.post("/showArticles", async function (req, res) {
 
-    const {filters} = req.body.filters;
+    const {filters} = req.body;
 
     if (filters.filterByUser) {
         filters.filterUserId = req.session.user.id;

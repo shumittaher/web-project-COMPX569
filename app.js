@@ -22,8 +22,8 @@ app.engine("handlebars", handlebars.create({
 }).engine);
 
 app.set("view engine", "handlebars");
-app.use("/bootstrap", express.static(__dirname + "/node_modules/bootstrap/dist"));
 
+app.use("/bootstrap", express.static(__dirname + "/node_modules/bootstrap/dist"));
 app.use("/public", express.static(path.join(__dirname, "public")));
 
 // Set up to read POSTed form data

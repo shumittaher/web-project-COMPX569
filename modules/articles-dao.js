@@ -23,11 +23,19 @@ async function postNew(articleData) {
 async function getArticles() {
     const db = await database;
 
-    const articles_result = await db.query(
-        "SELECT * FROM project_articles LEFT JOIN project_users ON project_articles.userid = project_users.id",
+    return await db.query(
+        `SELECT 
+                project_articles.id AS article_id, 
+                project_articles.title, 
+                project_articles.content, 
+                project_articles.image_path, 
+                project_articles.postTime, 
+                project_users.username, 
+                project_users.fullName, 
+                project_users.avatar 
+            FROM project_articles LEFT JOIN project_users 
+                ON project_articles.userid = project_users.id`,
     )
-
-    return articles_result.rows;
 }
 
 

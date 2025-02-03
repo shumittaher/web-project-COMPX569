@@ -66,7 +66,6 @@
     </div>
 
     <div id="articles_area">
-        {{> articles articles=articles}}
     </div>
 
 </div >
@@ -99,14 +98,14 @@
 
 
             async function fetchArticles() {
-            console.log('fetching articles')
+
             try {
                 const response = await fetch('/api/showArticles');
-                const articles = await response.json();
+                console.log(response);
+                const articles = await response.text();
+                console.log(articles);
+                document.querySelector("#articles_area").innerHTML = articles;
 
-                articles.forEach((article) => {
-                    console.log(article)
-                })
             } catch (error) {
                 console.error('Error fetching articles:', error);
             }

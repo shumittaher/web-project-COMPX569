@@ -16,8 +16,21 @@ router.post("/new", middleware.verifyAuthenticated, async function (req, res) {
 
 router.get("/showArticles", async function (req, res) {
 
-    const results = await articlesDao.getArticles()
-    return res.json(results)
+    try {
+        const articles = await articlesDao.getArticles();
+
+        res.render("partials/articles", { articles , layout:false}, function (err, renderedArticles) {
+            if (err) {
+                console.error("Error rendering articles partial:", err);
+                return res.status(500).send("Error rendering articles");
+            }
+            res.send(renderedArticles);
+        });
+
+    } catch (error) {
+        console.error("Error fetching articles:", error);
+        res.status(500).json({ error: "Failed to fetch articles" });
+    }
 })
 
 module.exports = router;

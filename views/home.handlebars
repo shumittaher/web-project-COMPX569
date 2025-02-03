@@ -96,61 +96,26 @@
     let sortSelectState = "";
     let sortTypeState = "asc";
     let articlesLoadedEvent = new CustomEvent('ArticlesLoaded');
+    let sortFilterChangedEvent = new CustomEvent('SortFilterChanged');
 
 
     document.addEventListener('DOMContentLoaded', function() {
-
-        {{#if user}}
-
-            const post_form_collapse = document.querySelector('#post_form_collapse')
-            const post_form_collapse_span = document.querySelector('#post_form_collapse_span')
-
-            post_form_collapse.addEventListener('click', ()=>{
-
-                post_form_collapse.classList.toggle('btn-primary')
-                post_form_collapse_span.style.width = post_form_collapse_span.style.width==='100%'?'0%':'100%'
-                post_form_collapse_span.classList.toggle('animation_div_size')
-
-            })
-
-            post_form_collapse_span.addEventListener('animationend', ()=>{
-                post_form_collapse_span.classList.toggle('animation_div_size')
-                post_form_collapse_span.style.animationDirection = post_form_collapse_span.style.animationDirection==='normal'?'reverse':'normal'
-
-            })
-
-            const onlyMineSwitch = document.querySelector('#myPostOnlySwitch')
-            onlyMineSwitch.addEventListener('click', ()=>{
-                onlyMineState = onlyMineSwitch.checked;
-                fetchArticles(article_area);
-            })
-
-        {{/if}}
-
         const article_area = document.querySelector('#articles_area')
-        const sort_select = document.querySelector('#sortSelect')
-        sort_select.addEventListener('change', ()=>{
-            sortSelectState = sort_select.value
-            fetchArticles(article_area);
-
+        document.addEventListener('SortFilterChanged', ()=>{
+            refreshArticles(article_area, '/api/showArticles');
         })
-        const sort_type = document.querySelector('#sortType')
-        sort_type.addEventListener('change', ()=>{
-            sortTypeState = sort_type.value
-            fetchArticles(article_area);
+        refreshArticles(article_area, '/api/showArticles');
+        setSortingListeners()
 
-        })
-
-        fetchArticles(article_area);
     });
 
-    async function fetchArticles(wheretoPut) {
+    async function refreshArticles(wheretoPut, api) {
 
         const filters = getFilters()
         const sorts = getSorts()
 
         try {
-            const response = await fetch('/api/showArticles', {
+            const response = await fetch(api, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -266,6 +231,50 @@
 
         const editModal = new bootstrap.Modal(document.querySelector("#editArticleModal"));
         editModal.show();
+    }
+
+
+    function setNewArticleFormAnimationLogic(){
+        const post_form_collapse = document.querySelector('#post_form_collapse')
+        const post_form_collapse_span = document.querySelector('#post_form_collapse_span')
+
+        post_form_collapse.addEventListener('click', ()=>{
+
+            post_form_collapse.classList.toggle('btn-primary')
+            post_form_collapse_span.style.width = post_form_collapse_span.style.width==='100%'?'0%':'100%'
+            post_form_collapse_span.classList.toggle('animation_div_size')
+        })
+
+        post_form_collapse_span.addEventListener('animationend', ()=>{
+            post_form_collapse_span.classList.toggle('animation_div_size')
+            post_form_collapse_span.style.animationDirection = post_form_collapse_span.style.animationDirection==='normal'?'reverse':'normal'
+        })
+    }
+
+    function setSortingListeners(){
+
+        {{#if user}}
+            setNewArticleFormAnimationLogic()
+
+            const onlyMineSwitch = document.querySelector('#myPostOnlySwitch')
+            onlyMineSwitch.addEventListener('click', ()=>{
+                onlyMineState = onlyMineSwitch.checked;
+                document.dispatchEvent(sortFilterChangedEvent)
+            })
+
+        {{/if}}
+
+        const sort_select = document.querySelector('#sortSelect')
+        sort_select.addEventListener('change', ()=>{
+            sortSelectState = sort_select.value
+            document.dispatchEvent(sortFilterChangedEvent)
+        })
+
+        const sort_type = document.querySelector('#sortType')
+        sort_type.addEventListener('change', ()=>{
+            sortTypeState = sort_type.value
+            document.dispatchEvent(sortFilterChangedEvent)
+        })
     }
 </script>
 

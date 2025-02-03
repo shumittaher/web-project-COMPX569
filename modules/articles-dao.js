@@ -22,8 +22,7 @@ async function postNew(articleData) {
 
 async function getArticles(filters) {
     const db = await database;
-
-    console.log(filterByUser, filterUserId);
+    const {filterByUser, filterUserId} = filters
 
     let query =
         `SELECT 

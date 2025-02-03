@@ -103,11 +103,33 @@ async function getArticleById(article_id) {
     return result[0]
 }
 
+async function updateArticle(articleId, userId, title, content, imagePath) {
+    const db = await database;
+
+    const sql = `
+        UPDATE project_articles
+        SET title = ?, content = ?, image_path = ?, postTime = NOW()
+        WHERE id = ? AND userid = ?
+    `;
+
+    const values = [title, content, imagePath, articleId, userId];
+
+    try {
+        const result = await db.query(sql, values);
+        return result.affectedRows > 0;
+    } catch (error) {
+        console.error("Error updating article:", error);
+        throw error;
+    }
+}
+
+
 module.exports = {
     postNew,
     getArticles,
     getUserLikesArticle,
     setUserLikesArticle,
     deleteUserLike,
-    getArticleById
+    getArticleById,
+    updateArticle
 }

@@ -1,5 +1,5 @@
-<form action="{{#if existingArticle}}/api/edit{{else}}/api/new{{/if}}" method="post" class="bg-light input_form">
-    <input type="hidden" id="editArticleId" name="article_id">
+<form {{#if existingArticle}}id="editBox"{{/if}} action="{{#if existingArticle}}/api/edit{{else}}/api/new{{/if}}" method="post" class="bg-light input_form">
+    <input type="hidden" class="editArticleId" name="article_id">
 
     <hr>
 

@@ -10,8 +10,8 @@ const database = mariadb.createPool({
     user: USER_NAME,
     password: USER_PASS,
     connectionLimit: 10,
-    idleTimeout: 60000,
-    acquireTimeout: 10000,
+    idleTimeout: 600000,
+    acquireTimeout: 30000,
 });
 
 module.exports = database;

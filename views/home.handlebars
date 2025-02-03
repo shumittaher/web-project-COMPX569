@@ -253,11 +253,10 @@
 
         document.querySelector("#edittitle").value = title || ""
         document.querySelector("#editcontent").value = content || ""
-        document.querySelector("#editArticleId").value = articleId
+        document.querySelector("#editBox .editArticleId").value = articleId
 
         const editModal = new bootstrap.Modal(document.querySelector("#editArticleModal"));
         editModal.show();
-
     }
 </script>
 

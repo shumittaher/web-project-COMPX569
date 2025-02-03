@@ -77,6 +77,10 @@
         </div>
     {{/if}}
 
+    <div id="sortBoxes">
+
+    </div>
+
 </div>
 <div class="p-3 bg-body-secondary rounded-3 rounded-top-0">
 
@@ -128,6 +132,7 @@
     async function fetchArticles(wheretoPut) {
 
         const filters = getFilters()
+        const sorts = getSorts()
 
         try {
             const response = await fetch('/api/showArticles', {
@@ -135,7 +140,10 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({filters})
+                body: JSON.stringify({
+                    filters,
+                    sorts
+                })
             });
             wheretoPut.innerHTML = await response.text();
 
@@ -148,6 +156,10 @@
         return {
             'filterByUser': onlyMineState
         }
+    }
+
+    function getSorts() {
+
     }
 
 </script>

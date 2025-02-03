@@ -104,18 +104,30 @@ router.post("/edit", middleware.verifyAuthenticated, async function (req, res) {
     const currentUser = req.session.user.id;
 
     const underlyingArticle = await articlesDao.getArticleById(article_id)
-    console.log(underlyingArticle)
+
     if (underlyingArticle.userid !== currentUser){
         return res.status(400).json({ error: "Unauthorized" });
     } else {
         const updated = await articlesDao.updateArticle(article_id, currentUser, title, content, image_path)
         if (updated) {
-            res.redirect("/home");
+            res.redirect(`/home`);
         } else {
             res.status(403).json({ success: false, message: "Failed to update article. Permission denied or invalid article ID." });
         }
     }
 
 })
+
+router.post("/comment", middleware.verifyAuthenticated, async function (req, res) {
+
+    const {parent_id, commentContent} = req.body;
+    const userid = req.session.user.id;
+    const result = await articlesDao.postNewComment({userid, commentContent, parent_id})
+
+
+
+    res.redirect("/home");
+})
+
 
 module.exports = router;

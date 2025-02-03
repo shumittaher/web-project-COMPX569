@@ -123,6 +123,26 @@ async function updateArticle(articleId, userId, title, content, imagePath) {
     }
 }
 
+async function postNewComment(commentData) {
+    const db = await database;
+
+    const {userid, commentContent, parent_id} = commentData;
+
+    const article_insert_result = await db.query(
+        "insert into project_articles (userid, content) values (?, ?)",
+        [userid, commentContent]
+    );
+
+    commentData.id = article_insert_result.insertId;
+
+    const article_relation_id = await db.query(
+        "insert into project_article_parents (article_id, parent_article_id) values (?, ?)",
+        [commentData.id, parent_id]
+    );
+
+    return commentData;
+}
+
 
 module.exports = {
     postNew,
@@ -131,5 +151,6 @@ module.exports = {
     setUserLikesArticle,
     deleteUserLike,
     getArticleById,
-    updateArticle
+    updateArticle,
+    postNewComment
 }

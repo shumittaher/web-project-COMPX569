@@ -23,15 +23,40 @@
             </button>
         </div>
 
-        {{#if this.isAuthor}}
-        <div class="editBox">
-            <button onClick="editClicked({{this.article_id}}, {{this.userid}})" class="btn btn-danger">
-                ✏️ Edit This
-            </button>
+        <div class="d-flex align-items-center justify-content-between align-items-center">
+            {{#if this.isAuthor}}
+            <div class="mx-2 editBox">
+                <button onClick="editClicked({{this.article_id}}, {{this.userid}})" class="btn btn-danger">
+                    ✏️ Edit This
+                </button>
+            </div>
+            {{/if}}
+
+            <div class="commentBox">
+                <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#commentOnArticle-{{this.article_id}}">
+                    ️🗨️ Comment
+                </button>
+            </div>
         </div>
-        {{/if}}
+
 
     </div>
 
     {{/if}}
+    <div id="commentOnArticle-{{this.article_id}}" class="collapse">
+        <form action="/api/comment" method="post" id="commentForm">
+            <input type="hidden" name="parent_id" value="{{this.article_id}}">
+
+            <div class="p-3" style="display: grid; row-gap: 1em;">
+
+                <div class="form-group d-flex align-items-start">
+                    <label for="commentContent-{{this.article_id}}" class="mx-3 w-25 text-end">Your Comment</label>
+                    <textarea id="commentContent-{{this.article_id}}" required class="form-control" name="commentContent" rows="5" placeholder="Your Comment..."></textarea>
+                </div>
+
+            </div>
+
+            <input class="btn btn-primary btn-lg py-4 w-100" type="submit" value="🗨️ Save Comment">
+        </form>
+    </div>
 </div>

@@ -10,10 +10,14 @@
         {{/if}}
     </div>
     <div class="card-footer">
-        <div id="like-status-{{this.article_id}}" class="like-status d-flex align-items-center">
-            <button id="like-button-{{this.article_id}}" class="btn btn-outline-primary">
-                <span id="like-icon-{{this.article_id}}">👍</span>
-                <span id="like-text-{{this.article_id}}">Like</span>
+        <div id="like-status-{{this.article_id}}" class="d-flex align-items-center opacity-0">
+            <button data-likeAction="true" class="btn btn-outline-primary addLikeButton">
+                <span>👍</span>
+                <span>Like</span>
+            </button>
+            <button data-likeAction="false" class="btn btn-primary removeLikeButton">
+                <span>❤️</span>
+                <span>Liked</span>
             </button>
         </div>
     </div>

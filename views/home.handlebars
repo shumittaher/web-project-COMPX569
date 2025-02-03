@@ -209,13 +209,23 @@
 
             const response = await fetchLikeStatus(articleID, userID)
             const isLiked = response.userLikedThis
-            if (isLiked) {
+            setLiked(articleID, isLiked)
 
-            }
         })
     })
 
 
+    function setLiked(articleID, isLiked) {
+        if (isLiked) {
+            document.querySelector(`#like-status-${articleID} .addLikeButton`).classList.add('d-none')
+            document.querySelector(`#like-status-${articleID} .removeLikeButton`).classList.remove('d-none')
+        } else {
+            document.querySelector(`#like-status-${articleID} .addLikeButton`).classList.remove('d-none')
+            document.querySelector(`#like-status-${articleID} .removeLikeButton`).classList.add('d-none')
+        }
+
+        document.querySelector(`#like-status-${articleID}`).classList.remove('opacity-0')
+    }
 </script>
 
 

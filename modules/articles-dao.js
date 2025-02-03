@@ -36,10 +36,11 @@ async function getArticles(filters, sorts) {
         FROM project_articles  
         LEFT JOIN project_users ON project_articles.userid = project_users.id 
         LEFT JOIN project_article_likes ON project_articles.id = project_article_likes.article_id 
+        WHERE project_articles.parent_article_id IS NULL 
         `
 
     if (filterByUser) {
-        query += ` WHERE project_articles.userid = ${filterUserId} `;
+        query += ` AND project_articles.userid = ${filterUserId} `;
     }
 
     query += `GROUP BY project_articles.id`
@@ -135,8 +136,22 @@ async function postNewComment(commentData) {
 
 async function getCommentsOnArticle(article_id) {
     const db = await database;
-
-    await db.query("SELECT * from project_articles WHERE article_id = ?", [article_id]);
+    return await db.query(`
+        SELECT 
+            project_articles.id AS article_id, 
+            project_articles.title,
+            project_articles.userid,
+            project_articles.content, 
+            project_articles.image_path, 
+            project_articles.postTime, 
+            project_users.username, 
+            project_users.fullName, 
+            project_users.avatar,
+            COUNT(project_article_likes.userid) as likeCount
+        FROM project_articles  
+        LEFT JOIN project_users ON project_articles.userid = project_users.id 
+        LEFT JOIN project_article_likes ON project_articles.id = project_article_likes.article_id 
+         WHERE parent_article_id = ?`, [article_id]);
 }
 
 

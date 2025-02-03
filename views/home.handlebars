@@ -191,10 +191,10 @@
 
         const articleCards = document.querySelectorAll('.articlesCard');
         {{#if user}}
-            updateLikeButtons(articleCards);
+            updateArticleDetails(articleCards);
 
 
-            function updateLikeButtons(articleCards) {
+            function updateArticleDetails(articleCards) {
                 articleCards.forEach(async function(articleCard) {
 
                     const articleID = articleCard.dataset.articleId
@@ -209,7 +209,16 @@
                             toggleLike(articleID, userID)
                         })
                     })
+
+                    await insertComments(articleCard, articleID)
+
                 })
+            }
+
+            async function insertComments(articleCard, articleID) {
+                const response = await fetch(`/api/comment/${articleID}`)
+                articleCard.querySelector('.commentsViewBox').innerHTML = await response.text()
+
             }
 
             function setLiked(articleID, isLiked) {

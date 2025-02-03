@@ -75,10 +75,18 @@
             <input id="myPostOnlySwitch" class="me-3 form-check-input" type="checkbox">
             <label class="form-check-label fs-5" for="myPostOnlySwitch">My Articles Only</label>
         </div>
+    {{else}}
+        <div></div>
     {{/if}}
 
-    <div id="sortBoxes">
-
+    <div class="w-25">
+        <label class="d-none" for="sortSelect">Sort by</label>
+        <select id="sortSelect" class="form-select">
+            <option value="">Sort by</option>
+            <option value="title">Title</option>
+            <option value="username">Username</option>
+            <option value="date">Date</option>
+        </select>
     </div>
 
 </div>

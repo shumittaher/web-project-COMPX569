@@ -20,7 +20,7 @@ async function postNew(articleData) {
     return articleData;
 }
 
-async function getArticles(filters) {
+async function getArticles(filters, sorts) {
     const db = await database;
     const {filterByUser, filterUserId} = filters
 

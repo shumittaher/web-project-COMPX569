@@ -98,6 +98,14 @@
     let articlesLoadedEvent = new CustomEvent('ArticlesLoaded');
     let sortFilterChangedEvent = new CustomEvent('SortFilterChanged');
 
+    let userID
+    {{#if user}}
+        userID = {{user.id}};
+        {{else}}
+        userID = null;
+    {{/if}}
+
+
 
     document.addEventListener('DOMContentLoaded', function() {
         const article_area = document.querySelector('#articles_area')

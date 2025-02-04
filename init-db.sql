@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS project_comments
     ancestor_article_id INT NOT NULL,
     FOREIGN KEY (parent_article_id) REFERENCES project_articles(id),
     FOREIGN KEY (ancestor_article_id) REFERENCES project_articles(id) ON DELETE CASCADE,
-    FOREIGN KEY (parent_comment_id) REFERENCES project_comments(id)
+    FOREIGN KEY (parent_comment_id) REFERENCES project_comments(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS project_article_likes

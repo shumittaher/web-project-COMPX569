@@ -59,9 +59,10 @@
             <input class="btn btn-primary btn-lg py-2 w-100" type="submit" value="🗨️ Save Comment">
         </form>
     </div>
-    <button onclick="loadCommentClicked({{this.article_id}})" class="btn btn-secondary btn-sm">Load Comments</button>
+    <button onclick="loadCommentClicked({{this.article_id}})" class="btn btn-secondary btn-sm"
+            data-bs-toggle="collapse" data-bs-target="#commentsViewBox-{{this.article_id}}">Load Comments</button>
 
-    <div class="commentsViewBox">
+    <div class="commentsViewBox collapse" id="commentsViewBox-{{this.article_id}}">
 
     </div>
 </div>

@@ -123,12 +123,12 @@ router.get("/comment/:articleId", async function (req, res) {
     if (articles.length < 1) {
         res.send(false)
     } else {
-        const articlesWithUserID = insertInformation(req, articles)
+        const commentsWithUserID = insertInformation(req, articles)
 
-        res.render("partials/articles", {articlesWithUserID, layout: false}, function (err, renderedArticles) {
+        res.render("partials/comments", {commentsWithUserID, layout: false}, function (err, renderedArticles) {
             if (err) {
                 console.error("Error rendering articles partial:", err);
-                return res.status(500).send("Error rendering articles");
+                return res.status(500).send("Error rendering comments");
             }
             res.send(renderedArticles);
         });

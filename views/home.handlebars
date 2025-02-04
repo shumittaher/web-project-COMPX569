@@ -284,10 +284,17 @@
         const response = await fetch(`/api/comment/${articleID}`)
         const content = await response.text()
 
-        if (content !== 'false') {
-            articleCard.querySelector('.commentsViewBox').classList.add('p-2')
-            articleCard.querySelector('.commentsViewBox').innerHTML = content
+        const underlyingCommentBox = articleCard.querySelector('.commentsViewBox')
+
+        if (content === 'false') {
+            underlyingCommentBox.innerHTML = `<h6 class="text-center text-muted">No Comments Yet</h6>`
+            return;
         }
+
+        underlyingCommentBox.innerHTML = content
+        underlyingCommentBox.classList.add('p-2')
+
+        underlyingCommentBox.dataset.ancestorId = underlyingCommentBox.parentElement.dataset.ancestorId
     }
 </script>
 

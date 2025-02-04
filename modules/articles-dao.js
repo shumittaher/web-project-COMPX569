@@ -11,8 +11,20 @@ async function postNew(articleData) {
     );
 
     articleData.id = article_insert_result.insertId;
+    await postUpdate(articleData.id)
 
     return articleData;
+}
+
+async function postUpdate(articleNumber) {
+    const db = await database;
+
+    await db.query(`
+        UPDATE project_articles
+        SET parent_article_id = ?
+        WHERE id = ?
+    `, [articleNumber, articleNumber]);
+
 }
 
 async function getArticles(filters, sorts) {
@@ -36,7 +48,7 @@ async function getArticles(filters, sorts) {
         FROM project_articles  
         LEFT JOIN project_users ON project_articles.userid = project_users.id 
         LEFT JOIN project_article_likes ON project_articles.id = project_article_likes.article_id 
-        WHERE project_articles.parent_article_id IS NULL 
+        WHERE project_articles.parent_article_id = project_articles.id
         `
 
     if (filterByUser) {
@@ -150,7 +162,9 @@ async function getCommentsOnArticle(article_ID) {
             project_users.avatar
         FROM project_articles LEFT JOIN project_users 
             ON project_articles.userid = project_users.id 
-         WHERE parent_article_id = ?`, [article_ID]);
+         WHERE parent_article_id = ?
+         AND project_articles.parent_article_id != project_articles.id
+         `, [article_ID]);
 }
 
 async function deleteArticle(article_id) {

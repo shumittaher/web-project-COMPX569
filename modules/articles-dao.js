@@ -242,6 +242,15 @@ async function deleteArticle(article_id) {
     )
 }
 
+async function deleteComment(comment_id) {
+    const db = await database;
+    return await db.query(`
+    DELETE FROM project_comments
+    WHERE id = ?
+    `, [comment_id]
+    )
+}
+
 
 module.exports = {
     postNew,
@@ -255,5 +264,6 @@ module.exports = {
     getCommentsOnArticle,
     deleteArticle,
     postNewCommentOnOtherComment,
-    getCommentsOnOtherComment
+    getCommentsOnOtherComment,
+    deleteComment
 }

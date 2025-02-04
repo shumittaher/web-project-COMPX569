@@ -130,7 +130,8 @@ router.get("/comment/:articleId", async function (req, res) {
     if (comments.length < 1) {
         res.send(false)
     } else {
-        const commentsWithUserID = insertInformation(req, comments)
+        const commentsWithInfo = insertInformation(req, comments)
+        const commentsWithUserID = insertAncInformation(req, commentsWithInfo)
 
         res.render("partials/comments", {commentsWithUserID, layout: false}, function (err, renderedArticles) {
             if (err) {
@@ -149,7 +150,8 @@ router.get("/commentOnComment/:parentCommentID", async function (req, res) {
     if (comments.length < 1) {
         res.send(false)
     } else {
-        const commentsWithUserID = insertInformation(req, comments)
+        const commentsWithInfo = insertInformation(req, comments)
+        const commentsWithUserID = insertAncInformation(req, commentsWithInfo)
 
         res.render("partials/comments", {commentsWithUserID, layout: false}, function (err, renderedArticles) {
             if (err) {
@@ -165,7 +167,7 @@ router.get("/deleteArticle/:articleId", async function (req, res) {
 
     const { articleId } = req.params;
     if (!await checkAuthorityAsAuthor(req, articleId)){
-        res.status(403).json({ success: false, message: "Failed to update article. Permission denied or invalid article ID." });
+        res.status(403).json({ success: false, message: "Permission denied" });
     } else {
         const updated = await articlesDao.deleteArticle(articleId)
         if (updated) {
@@ -176,6 +178,22 @@ router.get("/deleteArticle/:articleId", async function (req, res) {
     }
 })
 
+router.get("/deleteComment/:commentId", async function (req, res) {
+
+    const { commentId } = req.params;
+    if (false){
+        res.status(403).json({ success: false, message: "Permission denied" });
+    } else {
+        const updated = await articlesDao.deleteComment(commentId)
+        if (updated) {
+            return res.status(200).send("Success");
+        } else {
+            return res.status(500).send("Error");
+        }
+    }
+})
+
+
 
 function insertInformation(req, articles){
     return articles.map(article => {
@@ -183,7 +201,6 @@ function insertInformation(req, articles){
         if (req.session.user != null) {
             currentUserID = req.session.user.id
         }
-        console.log(article)
         return {
             ...article,
             userLoggedIn: currentUserID,
@@ -191,6 +208,20 @@ function insertInformation(req, articles){
         };
     });
 }
+
+function insertAncInformation(req, comments){
+    return comments.map(comment => {
+        let currentUserID = null
+        if (req.session.user != null) {
+            currentUserID = req.session.user.id
+        }
+        return {
+            ...comment,
+            isAncestor: comment.ancestorUserID === currentUserID
+        };
+    });
+}
+
 
 async function checkAuthorityAsAuthor(req, article_id) {
     const currentUser = req.session.user.id;

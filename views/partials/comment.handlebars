@@ -1,23 +1,12 @@
 <div id="comment-{{this.article_id}}" class="commentCard card mb-3" data-comment-id="{{this.article_id}}" data-user-id="{{this.userid}}">
 
-    {{this.ancestorUserID}}
-    {{this.ancestor_article_id}}
-
-        {{#if this.userLoggedIn}}
-        <div class="d-flex flex-row-reverse">
-            <button onClick="deleteClicked({{this.article_id}})" class="btn btn-danger">
-                🗑️
-            </button>
-        </div>
-        {{/if}}
-
     <div class="card-body">
         <small class="text-muted">Posted by {{this.fullName}}</small><br>
         <small class="text-muted">{{this.postTime}}</small>
         <hr>
         <p class="card-text mt-3">{{this.content}}</p>
     </div>
-1
+
     {{#if this.userLoggedIn}}
     <div class="card-footer d-flex justify-content-between">
         <div id="like-status-{{this.article_id}}" class="d-flex align-items-center opacity-0 likeButtonsBox">
@@ -33,19 +22,13 @@
 
         <div class="d-flex align-items-center justify-content-between align-items-center">
 
-<!--            {{#if this.isAuthor}}-->
-<!--            <div class="mx-1">-->
-<!--                <button onClick="editClicked({{this.article_id}})" class="btn btn-danger">-->
-<!--                    ✏️ Edit This-->
-<!--                </button>-->
-<!--            </div>-->
-
-<!--            <div class="mx-1">-->
-<!--                <button onClick="deleteClicked({{this.article_id}})" class="btn btn-danger">-->
-<!--                    🗑️ Delete-->
-<!--                </button>-->
-<!--            </div>-->
-<!--            {{/if}}-->
+            {{#if this.isAncestor}}
+                <div class="mx-1">
+                    <button onClick="deleteCommentClicked({{this.article_id}})" class="btn btn-danger">
+                        🗑️ Delete
+                    </button>
+                </div>
+            {{/if}}
 
             <div class="ms-1 commentBox">
                 <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#commentOnComment-{{this.article_id}}">

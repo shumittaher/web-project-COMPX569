@@ -214,6 +214,15 @@
         }
     }
 
+    async function deleteCommentClicked(commentId){
+
+        const response = await fetch(`/api/deleteComment/${commentId}`);
+        const data = await response.text()
+        if (data === 'Success') {
+            document.dispatchEvent(sortFilterChangedEvent)
+        }
+    }
+
     function setNewArticleFormAnimationLogic(){
         const post_form_collapse = document.querySelector('#post_form_collapse')
         const post_form_collapse_span = document.querySelector('#post_form_collapse_span')

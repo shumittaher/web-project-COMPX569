@@ -44,12 +44,10 @@ async function getArticles(filters, sorts) {
             project_users.avatar
         FROM project_articles  
         LEFT JOIN project_users ON project_articles.userid = project_users.id 
-        LEFT JOIN project_article_likes ON project_articles.id = project_article_likes.article_id 
-
-`
+        LEFT JOIN project_article_likes ON project_articles.id = project_article_likes.article_id `
 
     if (filterByUser) {
-        query += ` AND project_articles.userid = ${filterUserId} `;
+        query += ` WHERE project_articles.userid = ${filterUserId} `;
     }
 
     if (sortSelectState !== '') {

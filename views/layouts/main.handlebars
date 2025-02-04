@@ -39,21 +39,20 @@
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 <script>
 
-    const quill1 = new Quill('#editor', {
+    const quill1 = new Quill('#newArticleForm .quilEditBox', {
         theme: 'snow',
     });
 
-    const quill2 = new Quill('#editeditor', {
+    const quill2 = new Quill('#editArticleForm .quilEditBox', {
         theme: 'snow',
     });
 
-    const form = document.querySelector('form.input_form');
-    form.onsubmit = function () {
-        const editorContent = document.querySelector('#editor .ql-editor').innerHTML;
-        document.querySelector('textarea[name="content"]').value = editorContent;
-    };
-
-
+    const forms = document.querySelectorAll('form.input_form');
+    forms.forEach((form) => {
+        form.addEventListener('submit', (event) => {
+            form.querySelector(' .quillTargetBox').value = form.querySelector('.quilEditBox .ql-editor').innerHTML
+        })
+    })
 </script>
 </body>
 </html>

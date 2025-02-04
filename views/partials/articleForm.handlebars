@@ -16,9 +16,13 @@
             <input id="{{#if existingArticle}}edit{{/if}}title" required class="form-control" autofocus type="text" name="title" maxlength="32" placeholder="Enter article title">
         </div>
 
+
         <div class="form-group d-flex align-items-start">
             <label for="{{#if existingArticle}}edit{{/if}}content" class="mx-3 w-25 text-end">Content</label>
-            <textarea id="{{#if existingArticle}}edit{{/if}}content" required class="form-control" name="content" rows="10" placeholder="Write your article here..."></textarea>
+            <div class="w-100" >
+                <div id="{{#if existingArticle}}edit{{/if}}editor" style="width: 100%; height: 300px;" class="form-control"></div>
+            </div>
+            <textarea id="{{#if existingArticle}}edit{{/if}}content" required class="form-control" name="content" style="display: none;"></textarea>
         </div>
 
         <div class="form-group d-flex align-items-center">

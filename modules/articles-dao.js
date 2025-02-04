@@ -43,8 +43,7 @@ async function getArticles(filters, sorts) {
             project_articles.postTime, 
             project_users.username, 
             project_users.fullName, 
-            project_users.avatar,
-            COUNT(project_article_likes.userid) as likeCount
+            project_users.avatar
         FROM project_articles  
         LEFT JOIN project_users ON project_articles.userid = project_users.id 
         LEFT JOIN project_article_likes ON project_articles.id = project_article_likes.article_id 
@@ -54,8 +53,6 @@ async function getArticles(filters, sorts) {
     if (filterByUser) {
         query += ` AND project_articles.userid = ${filterUserId} `;
     }
-
-    query += `GROUP BY project_articles.id`
 
     if (sortSelectState !== '') {
         query += ` ORDER BY ${sortSelectState} ${sortTypeState} `;

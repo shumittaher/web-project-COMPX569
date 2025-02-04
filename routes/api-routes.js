@@ -157,6 +157,7 @@ function insertInformation(req, articles){
         if (req.session.user != null) {
             currentUserID = req.session.user.id
         }
+        console.log(article)
         return {
             ...article,
             userLoggedIn: currentUserID,

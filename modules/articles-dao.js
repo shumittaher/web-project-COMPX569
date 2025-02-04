@@ -154,6 +154,15 @@ async function getCommentsOnArticle(article_id) {
          WHERE parent_article_id = ?`, [article_id]);
 }
 
+async function deleteArticle(article_id) {
+    const db = await database;
+    return await db.query(`
+    DELETE FROM project_articles
+    WHERE id = ?
+    `, [article_id]
+    )
+}
+
 
 module.exports = {
     postNew,
@@ -164,5 +173,6 @@ module.exports = {
     getArticleById,
     updateArticle,
     postNewComment,
-    getCommentsOnArticle
+    getCommentsOnArticle,
+    deleteArticle
 }

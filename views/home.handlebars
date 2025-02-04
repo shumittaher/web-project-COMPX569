@@ -175,7 +175,7 @@
         await insertComments(articleCard, articleID)
     }
 
-    async function editClicked(articleId, userId) {
+    async function editClicked(articleId) {
 
         const response = await fetch(`/api/article/${articleId}`);
         const article = await response.json();
@@ -187,6 +187,15 @@
 
         const editModal = new bootstrap.Modal(document.querySelector("#editArticleModal"));
         editModal.show();
+    }
+
+    async function deleteClicked(articleId){
+
+        const response = await fetch(`/api/deleteArticle/${articleId}`);
+        const data = await response.text()
+        if (data === 'Success') {
+            document.dispatchEvent(sortFilterChangedEvent)
+        }
     }
 
     function setNewArticleFormAnimationLogic(){

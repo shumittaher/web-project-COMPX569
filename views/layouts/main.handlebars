@@ -53,11 +53,6 @@
         document.querySelector('textarea[name="content"]').value = editorContent;
     };
 
-    // If editing an existing article, populate Quill with existing content
-        {{#if existingArticle}}
-        const existingContent = `{{{existingArticle.content}}}`; // Use triple braces to avoid HTML escaping
-        quill2.root.innerHTML = existingContent;
-        {{/if}}
 
 </script>
 </body>

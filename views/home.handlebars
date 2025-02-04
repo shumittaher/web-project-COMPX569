@@ -283,8 +283,7 @@
     async function insertComments(articleCard, articleID) {
         const response = await fetch(`/api/comment/${articleID}`)
         const content = await response.text()
-        console.log("sending for :", articleID)
-        console.log(content)
+
         if (content !== 'false') {
             articleCard.querySelector('.commentsViewBox').classList.add('p-2')
             articleCard.querySelector('.commentsViewBox').innerHTML = content

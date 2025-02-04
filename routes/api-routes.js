@@ -9,6 +9,8 @@ const fs = require("fs");
 const upload = multer({
     dest: path.join(__dirname, "temp")
 });
+const {Jimp} = require("jimp");
+
 
 router.post("/uploadImage", upload.single("imageFile"), async (req, res) => {
     if (!req.file) {
@@ -16,8 +18,11 @@ router.post("/uploadImage", upload.single("imageFile"), async (req, res) => {
     }
     const fileInfo = req.file;
     const oldFileName = fileInfo.path;
-    const newFileName = `./public/uploadedFiles/${fileInfo.originalname}`;
-    fs.renameSync(oldFileName, newFileName);
+
+    let image = await Jimp.read(`${oldFileName}`);
+    image.resize({ w: 650 });
+    await image.write(`./public/uploadedFiles/${fileInfo.originalname}`);
+    res.status(200)
 })
 
 router.post("/new", middleware.verifyAuthenticated, async function (req, res) {

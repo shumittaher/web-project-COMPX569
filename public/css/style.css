@@ -20,7 +20,7 @@
     display: grid;
 }
 
-.input_form > input{
+.input_form>input{
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;
     font-size: x-large;

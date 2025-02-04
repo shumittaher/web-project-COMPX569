@@ -38,8 +38,6 @@ app.use(session({
     secret: "COMPX569FinalProject"
 }));
 
-
-
 // Setup our routes
 const account = require("./routes/account-routes.js");
 app.use("/account", account);

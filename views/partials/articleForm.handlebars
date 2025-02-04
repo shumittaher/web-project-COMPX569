@@ -1,4 +1,10 @@
-<form {{#if existingArticle}}id="editBox"{{/if}} action="{{#if existingArticle}}/api/edit{{else}}/api/new{{/if}}" method="post" class="bg-light input_form">
+<form
+        {{#if existingArticle}}
+        id="editBox"
+        {{/if}}
+        action="{{#if existingArticle}}/api/edit{{else}}/api/new{{/if}}"
+        method="post" class="bg-light input_form rounded">
+
     <input type="hidden" class="editArticleId" name="article_id">
 
     <hr>
@@ -17,11 +23,10 @@
 
         <div class="form-group d-flex align-items-center">
             <label for="{{#if existingArticle}}edit{{/if}}image" class="mx-3 w-25 text-end">Upload Image</label>
-            <input id="{{#if existingArticle}}edit{{/if}}image" class="form-control" type="file" name="image_path" accept="image/jpx, image/png, image/gif, image/bmp">
-            <small id="{{#if existingArticle}}edit{{/if}}imageFeedback" class="form-text"></small>
+            <input id="{{#if existingArticle}}edit{{/if}}image" class="form-control imageUploader" type="file" name="image_path" accept=".png,.jpg,.jpeg,.bmp">
         </div>
 
     </div>
 
-    <input class="btn btn-primary btn-lg py-4" type="submit" value="{{#if existingArticle}}💾 Save Changes{{else}}📝 Publish{{/if}}">
+    <input class="btn btn-primary btn-lg py-4 w-100" type="submit" value="{{#if existingArticle}}💾 Save Changes{{else}}📝 Publish{{/if}}">
 </form>

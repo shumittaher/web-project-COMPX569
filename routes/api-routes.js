@@ -3,7 +3,22 @@ const router = express.Router();
 
 const middleware = require("../middleware/auth");
 const articlesDao = require("../modules/articles-dao");
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
+const upload = multer({
+    dest: path.join(__dirname, "temp")
+});
 
+router.post("/uploadImage", upload.single("imageFile"), async (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ error: "No file uploaded" });
+    }
+    const fileInfo = req.file;
+    const oldFileName = fileInfo.path;
+    const newFileName = `./public/uploadedFiles/${fileInfo.originalname}`;
+    fs.renameSync(oldFileName, newFileName);
+})
 
 router.post("/new", middleware.verifyAuthenticated, async function (req, res) {
 

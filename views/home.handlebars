@@ -109,6 +109,37 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         const article_area = document.querySelector('#articles_area')
+        const inputForms = document.querySelectorAll('.input_form')
+        const imageUploaders = document.querySelectorAll('.imageUploader')
+
+        imageUploaders.forEach(uploader => {
+            uploader.addEventListener("change", async function(event) {
+                const file = event.target.files[0];
+
+                if (!file) return;
+
+                const formData = new FormData();
+                formData.append("imageFile", file);
+
+                try {
+                    const response = await fetch("/api/uploadImage", {
+                        method: "POST",
+                        body: formData
+                    });
+
+                    const result = await response.json();
+                    if (response.ok) {
+                        console.log("Upload successful:", result);
+                    } else {
+                        console.error("Upload failed:", result);
+                    }
+                } catch (error) {
+                    console.error("Error uploading image:", error);
+                }
+            })
+        })
+
+
         document.addEventListener('SortFilterChanged', ()=>{
             refreshArticles(article_area);
         })

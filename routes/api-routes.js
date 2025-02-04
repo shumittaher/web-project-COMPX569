@@ -3,9 +3,9 @@ const router = express.Router();
 
 const middleware = require("../middleware/auth");
 const articlesDao = require("../modules/articles-dao");
-const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const multer = require("multer");
 const upload = multer({
     dest: path.join(__dirname, "temp")
 });
@@ -22,6 +22,7 @@ router.post("/uploadImage", upload.single("imageFile"), async (req, res) => {
     let image = await Jimp.read(`${oldFileName}`);
     image.resize({ w: 650 });
     await image.write(`./public/uploadedFiles/${fileInfo.originalname}`);
+    deleteImageByPath(oldFileName);
     res.status(200)
 })
 
@@ -115,8 +116,9 @@ router.post("/edit", middleware.verifyAuthenticated, async function (req, res) {
     let imageUpdate = true
     if (image_path===""){
         imageUpdate = false
+    } else{
+        await deleteImage(article_id)
     }
-
 
     if (!await checkAuthorityAsAuthor(req, article_id)){
         return res.status(400).json({ error: "Unauthorized" });
@@ -256,5 +258,24 @@ async function checkAuthorityAsAuthor(req, article_id) {
     return underlyingArticle.userid === currentUser;
 }
 
+async function deleteImage(article_id) {
+    const underlyingArticle = await articlesDao.getArticleById(article_id)
+    if (underlyingArticle.image_path === "" || underlyingArticle.image_path === null) {
+        return
+    }
+    const fullPath = path.join(__dirname, '..', 'public', 'uploadedFiles', underlyingArticle.image_path);
+    deleteImageByPath(fullPath)
+}
+
+function deleteImageByPath(fullPath) {
+
+    fs.unlink(fullPath, (err) => {
+        if (err) {
+            console.error("Error deleting file:", err);
+        } else {
+            console.log("File deleted successfully");
+        }
+    });
+}
 
 module.exports = router;

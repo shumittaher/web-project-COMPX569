@@ -134,7 +134,7 @@ async function postNewComment(commentData) {
     return commentData;
 }
 
-async function getCommentsOnArticle(article_id) {
+async function getCommentsOnArticle(article_ID) {
     const db = await database;
     return await db.query(`
         SELECT 
@@ -143,15 +143,14 @@ async function getCommentsOnArticle(article_id) {
             project_articles.userid,
             project_articles.content, 
             project_articles.image_path, 
-            project_articles.postTime, 
+            project_articles.postTime,
+            project_articles.parent_article_id,
             project_users.username, 
             project_users.fullName, 
-            project_users.avatar,
-            COUNT(project_article_likes.userid) as likeCount
-        FROM project_articles  
-        LEFT JOIN project_users ON project_articles.userid = project_users.id 
-        LEFT JOIN project_article_likes ON project_articles.id = project_article_likes.article_id 
-         WHERE parent_article_id = ?`, [article_id]);
+            project_users.avatar
+        FROM project_articles LEFT JOIN project_users 
+            ON project_articles.userid = project_users.id 
+         WHERE parent_article_id = ?`, [article_ID]);
 }
 
 async function deleteArticle(article_id) {

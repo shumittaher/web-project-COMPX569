@@ -120,10 +120,15 @@ router.get("/comment/:articleId", async function (req, res) {
     const { articleId } = req.params;
     const articles = await articlesDao.getCommentsOnArticle(articleId)
 
-    if (articles[0].article_id === null) {
+    console.log("before: ",articles, "articleId", articleId);
+
+    if (articles.length < 1) {
         res.send(false)
     } else {
         const articlesWithUserID = insertInformation(req, articles)
+
+        console.log("after: ", articlesWithUserID, "articleId", articleId);
+
 
         res.render("partials/articles", {articlesWithUserID, layout: false}, function (err, renderedArticles) {
             if (err) {

@@ -122,16 +122,19 @@ router.get("/comment/:articleId", async function (req, res) {
     const { articleId } = req.params;
     const articles = await articlesDao.getCommentsOnArticle(articleId)
 
-    const articlesWithUserID = insertInformation(req, articles)
+    if (articles[0].article_id === null) {
+        res.send(false)
+    } else {
+        const articlesWithUserID = insertInformation(req, articles)
 
-    res.render("partials/articles", { articlesWithUserID , layout:false}, function (err, renderedArticles) {
-        if (err) {
-            console.error("Error rendering articles partial:", err);
-            return res.status(500).send("Error rendering articles");
-        }
-        res.send(renderedArticles);
-    });
-
+        res.render("partials/articles", {articlesWithUserID, layout: false}, function (err, renderedArticles) {
+            if (err) {
+                console.error("Error rendering articles partial:", err);
+                return res.status(500).send("Error rendering articles");
+            }
+            res.send(renderedArticles);
+        });
+    }
 })
 
 function insertInformation(req, articles){

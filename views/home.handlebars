@@ -102,63 +102,18 @@
     document.addEventListener('DOMContentLoaded', function() {
         const article_area = document.querySelector('#articles_area')
         document.addEventListener('SortFilterChanged', ()=>{
-            refreshArticles(article_area, '/api/showArticles');
+            refreshArticles(article_area);
         })
-        refreshArticles(article_area, '/api/showArticles');
+        refreshArticles(article_area);
         setSortingListeners()
 
     });
-
-    async function refreshArticles(wheretoPut, api) {
-
-        const filters = getFilters()
-        const sorts = getSorts()
-
-        try {
-            const response = await fetch(api, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    filters,
-                    sorts
-                })
-            });
-            wheretoPut.innerHTML = await response.text();
-            document.dispatchEvent(articlesLoadedEvent);
-
-
-        } catch (error) {
-            wheretoPut.innerHTML = 'Error fetching articles: ' + error
-        }
-    }
-
-    async function fetchLikeStatus(articleId, userId){
-        const response = await fetch(`/api/getUserLikeStatus/${articleId}/${userId}`)
-        return await response.json();
-    }
-
-    function getFilters() {
-        return {
-            'filterByUser': onlyMineState
-        }
-    }
-
-    function getSorts() {
-        return {
-            sortSelectState: sortSelectState,
-            sortTypeState: sortTypeState
-        }
-    }
 
     document.addEventListener('ArticlesLoaded', function() {
 
         const articleCards = document.querySelectorAll('.articlesCard');
         {{#if user}}
             updateArticleDetails(articleCards);
-
-
             function updateArticleDetails(articleCards) {
                 articleCards.forEach(async function(articleCard) {
 
@@ -182,7 +137,10 @@
 
             async function insertComments(articleCard, articleID) {
                 const response = await fetch(`/api/comment/${articleID}`)
-                articleCard.querySelector('.commentsViewBox').innerHTML = await response.text()
+                const content = await response.text()
+                console.log(content , "ArticleID: -", articleID)
+                articleCard.querySelector('.commentsViewBox').classList.add('p-2')
+                articleCard.querySelector('.commentsViewBox').innerHTML = content
 
             }
 
@@ -275,6 +233,45 @@
             sortTypeState = sort_type.value
             document.dispatchEvent(sortFilterChangedEvent)
         })
+    }
+
+    async function refreshArticles(wheretoPut) {
+        const filters = getFilters()
+        const sorts = getSorts()
+        try {
+            const response = await fetch('/api/showArticles', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    filters,
+                    sorts
+                })
+            });
+            wheretoPut.innerHTML = await response.text();
+            document.dispatchEvent(articlesLoadedEvent);
+        } catch (error) {
+            wheretoPut.innerHTML = 'Error fetching articles: ' + error
+        }
+    }
+
+    async function fetchLikeStatus(articleId, userId){
+        const response = await fetch(`/api/getUserLikeStatus/${articleId}/${userId}`)
+        return await response.json();
+    }
+
+    function getFilters() {
+        return {
+            'filterByUser': onlyMineState
+        }
+    }
+
+    function getSorts() {
+        return {
+            sortSelectState: sortSelectState,
+            sortTypeState: sortTypeState
+        }
     }
 </script>
 

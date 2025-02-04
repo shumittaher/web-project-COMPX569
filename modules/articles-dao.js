@@ -148,23 +148,42 @@ async function postNewComment(commentData) {
 
 async function getCommentsOnArticle(article_ID) {
     const db = await database;
-    return await db.query(`
-        SELECT 
-            project_articles.id AS article_id, 
-            project_articles.title,
-            project_articles.userid,
-            project_articles.content, 
-            project_articles.image_path, 
-            project_articles.postTime,
-            project_articles.parent_article_id,
-            project_users.username, 
-            project_users.fullName, 
-            project_users.avatar
-        FROM project_articles LEFT JOIN project_users 
-            ON project_articles.userid = project_users.id 
-         WHERE parent_article_id = ?
-         AND project_articles.parent_article_id != project_articles.id
-         `, [article_ID]);
+    const sql = `
+        SELECT * FROM (
+            SELECT
+                project_articles.id AS article_id,
+                project_articles.title,
+                project_articles.userid,
+                project_articles.content,
+                project_articles.image_path,
+                project_articles.postTime,
+                project_articles.parent_article_id AS ancestorArticleID,
+                project_users.username,
+                project_users.fullName,
+                project_users.avatar
+            FROM project_articles
+            LEFT JOIN project_users ON project_articles.userid = project_users.id
+            WHERE parent_article_id = ?
+            AND project_articles.parent_article_id != project_articles.id
+        ) AS commentsTable
+        LEFT JOIN (
+            SELECT
+                project_articles.id AS ancestorID,
+                project_articles.userid AS ancestorUserID
+            FROM project_articles
+            LEFT JOIN project_users ON project_articles.userid = project_users.id
+        ) AS ancestorTable 
+        ON ancestorTable.ancestorID = commentsTable.ancestorArticleID
+    `;
+
+    try {
+        const rows = await db.query(sql, [article_ID]);
+        return rows;  // Return the fetched results
+    } catch (error) {
+        console.error("Error fetching comments with ancestors:", error);
+        throw error;
+    }
+
 }
 
 async function deleteArticle(article_id) {

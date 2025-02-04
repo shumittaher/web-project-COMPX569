@@ -94,7 +94,7 @@ router.post("/edit", middleware.verifyAuthenticated, async function (req, res) {
     const {title, content, image_path, article_id} = req.body;
     const currentUser = req.session.user.id;
 
-    if (!await checkAuthority(req, article_id)){
+    if (!await checkAuthorityAsAuthor(req, article_id)){
         return res.status(400).json({ error: "Unauthorized" });
     } else {
         const updated = await articlesDao.updateArticle(article_id, currentUser, title, content, image_path)
@@ -138,7 +138,7 @@ router.get("/comment/:articleId", async function (req, res) {
 router.get("/deleteArticle/:articleId", async function (req, res) {
 
     const { articleId } = req.params;
-    if (!await checkAuthority(req, articleId)){
+    if (!await checkAuthorityAsAuthor(req, articleId)){
         res.status(403).json({ success: false, message: "Failed to update article. Permission denied or invalid article ID." });
     } else {
         const updated = await articlesDao.deleteArticle(articleId)
@@ -165,7 +165,7 @@ function insertInformation(req, articles){
     });
 }
 
-async function checkAuthority(req, article_id) {
+async function checkAuthorityAsAuthor(req, article_id) {
     const currentUser = req.session.user.id;
     const underlyingArticle = await articlesDao.getArticleById(article_id)
 

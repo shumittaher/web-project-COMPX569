@@ -31,3 +31,31 @@ CREATE TABLE IF NOT EXISTS project_article_likes
     FOREIGN KEY (userid) REFERENCES project_users (id) ON DELETE CASCADE,
     PRIMARY KEY (article_id, userid)
 );
+
+SELECT * from
+(SELECT
+    project_articles.id AS article_id,
+    project_articles.title,
+    project_articles.userid,
+    project_articles.content,
+    project_articles.image_path,
+    project_articles.postTime,
+    project_articles.parent_article_id AS ancestorArticleID,
+    project_users.username,
+    project_users.fullName,
+    project_users.avatar
+FROM project_articles
+    LEFT JOIN project_users
+    ON project_articles.userid = project_users.id
+ WHERE parent_article_id = 1
+ AND project_articles.parent_article_id != project_articles.id) as commentsTable
+    LEFT JOIN (
+    SELECT
+        project_articles.id as ancestorArticleID,
+        project_articles.userid As ancestorUserID
+    FROM project_articles
+             LEFT JOIN project_users
+                       ON project_articles.userid = project_users.id
+) as ancestorTable ON ancestorTable.ancestorArticleID = commentsTable.ancestorArticleID
+
+ ;

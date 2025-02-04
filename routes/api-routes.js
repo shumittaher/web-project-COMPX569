@@ -198,6 +198,7 @@ router.get("/deleteArticle/:articleId", async function (req, res) {
         res.status(403).json({ success: false, message: "Permission denied" });
     } else {
         const updated = await articlesDao.deleteArticle(articleId)
+        await deleteImage(articleId)
         if (updated) {
             return res.status(200).send("Success");
         } else {

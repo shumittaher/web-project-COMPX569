@@ -46,3 +46,9 @@
 .likeButtonsBox button{
     width: 6rem;
 }
+
+.article-image {
+    max-width: 550px;
+    max-height: 550px;
+    object-fit: contain;
+}

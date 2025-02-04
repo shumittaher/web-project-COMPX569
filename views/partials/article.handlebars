@@ -5,10 +5,12 @@
         <small class="text-muted">Posted by {{this.fullName}}</small><br>
         <small class="text-muted">{{this.postTime}}</small>
         <hr>
-        <p class="card-text mt-3">{{this.content}}</p>
+
         {{#if this.image_path}}
-            <img src="public/uploadedFiles/{{this.image_path}}" alt="Article Image" class="img-fluid mb-3">
+            <img src="public/uploadedFiles/{{this.image_path}}" alt="Article Image" onerror="this.onerror=null; this.src='public/placeholder.jpg';"
+                 class="img-fluid float-end ms-3 article-image">
         {{/if}}
+        <p class="card-text mt-3">{{this.content}} </p>
     </div>
 
     {{#if this.userLoggedIn}}

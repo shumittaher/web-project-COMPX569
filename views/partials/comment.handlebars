@@ -1,17 +1,23 @@
-<div id="article-{{this.article_id}}" class="articlesCard card mb-3" data-article-id="{{this.article_id}}" data-user-id="{{this.userid}}">
+<div id="comment-{{this.article_id}}" class="commentCard card mb-3" data-comment-id="{{this.article_id}}" data-user-id="{{this.userid}}">
 
+    {{this.ancestorUserID}}
+    {{this.ancestor_article_id}}
+
+        {{#if this.userLoggedIn}}
+        <div class="d-flex flex-row-reverse">
+            <button onClick="deleteClicked({{this.article_id}})" class="btn btn-danger">
+                🗑️
+            </button>
+        </div>
+        {{/if}}
 
     <div class="card-body">
-        <h5 class="card-title">{{this.title}}</h5>
         <small class="text-muted">Posted by {{this.fullName}}</small><br>
         <small class="text-muted">{{this.postTime}}</small>
         <hr>
         <p class="card-text mt-3">{{this.content}}</p>
-        {{#if this.image_path}}
-            <img src="{{this.image_path}}" alt="Article Image" class="img-fluid mb-3">
-        {{/if}}
     </div>
-
+1
     {{#if this.userLoggedIn}}
     <div class="card-footer d-flex justify-content-between">
         <div id="like-status-{{this.article_id}}" class="d-flex align-items-center opacity-0 likeButtonsBox">
@@ -27,22 +33,22 @@
 
         <div class="d-flex align-items-center justify-content-between align-items-center">
 
-            {{#if this.isAuthor}}
-            <div class="mx-1">
-                <button onClick="editClicked({{this.article_id}})" class="btn btn-danger">
-                    ✏️ Edit This
-                </button>
-            </div>
+<!--            {{#if this.isAuthor}}-->
+<!--            <div class="mx-1">-->
+<!--                <button onClick="editClicked({{this.article_id}})" class="btn btn-danger">-->
+<!--                    ✏️ Edit This-->
+<!--                </button>-->
+<!--            </div>-->
 
-            <div class="mx-1">
-                <button onClick="deleteClicked({{this.article_id}})" class="btn btn-danger">
-                    🗑️ Delete
-                </button>
-            </div>
-            {{/if}}
+<!--            <div class="mx-1">-->
+<!--                <button onClick="deleteClicked({{this.article_id}})" class="btn btn-danger">-->
+<!--                    🗑️ Delete-->
+<!--                </button>-->
+<!--            </div>-->
+<!--            {{/if}}-->
 
             <div class="ms-1 commentBox">
-                <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#commentOnArticle-{{this.article_id}}">
+                <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#commentOnComment-{{this.article_id}}">
                     ️🗨️ Comment
                 </button>
             </div>
@@ -53,10 +59,10 @@
 
     {{/if}}
 
-    <div id="commentOnArticle-{{this.article_id}}" class="collapse">
-        <form action="/api/comment" method="post" id="commentForm">
+    <div id="commentOnComment-{{this.article_id}}" class="collapse">
+        <form action="/api/commentOnComment" method="post" id="commentForm">
             <input type="hidden" name="parent_id" value="{{this.article_id}}">
-            <input type="hidden" name="anc_id" value="{{this.article_id}}">
+            <input type="hidden" name="anc_id" value="{{this.ancestor_article_id}}">
 
             <div class="p-3" style="display: grid; row-gap: 1em;">
 
@@ -69,10 +75,10 @@
             <input class="btn btn-primary btn-lg py-2 w-100" type="submit" value="🗨️ Save Comment">
         </form>
     </div>
-    <button onclick="loadCommentClicked({{this.article_id}})" class="btn btn-secondary btn-sm"
-            data-bs-toggle="collapse" data-bs-target="#commentsViewBoxArticle-{{this.article_id}}">Show Comments</button>
+    <button onclick="loadCommentClicked({{this.article_id}}, true)" class="btn btn-secondary btn-sm"
+            data-bs-toggle="collapse" data-bs-target="#commentsViewBox-{{this.article_id}}">Show Comments</button>
 
-    <div class="commentsViewBox p-2 collapse border-5 border-primary-subtle border-start" id="commentsViewBoxArticle-{{this.article_id}}">
+    <div class="commentsViewBox p-2 collapse border-5 border-primary-subtle border-start" id="commentsViewBox-{{this.article_id}}">
         <div style="height: 250px;" class="d-flex justify-content-center align-items-center">
             <h6>Loading</h6>
         </div>

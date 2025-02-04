@@ -11,8 +11,6 @@ async function postNew(articleData) {
     );
 
     articleData.id = article_insert_result.insertId;
-    await postUpdate(articleData.id)
-
     return articleData;
 }
 
@@ -47,8 +45,8 @@ async function getArticles(filters, sorts) {
         FROM project_articles  
         LEFT JOIN project_users ON project_articles.userid = project_users.id 
         LEFT JOIN project_article_likes ON project_articles.id = project_article_likes.article_id 
-        WHERE project_articles.parent_article_id = project_articles.id
-        `
+
+`
 
     if (filterByUser) {
         query += ` AND project_articles.userid = ${filterUserId} `;
@@ -131,11 +129,26 @@ async function updateArticle(articleId, userId, title, content, imagePath) {
 async function postNewComment(commentData) {
     const db = await database;
 
-    const {userid, commentContent, parent_id} = commentData;
+    const {userid, commentContent, parent_id, anc_id} = commentData;
 
     const article_insert_result = await db.query(
-        "insert into project_articles (userid, content, parent_article_id) values (?, ?, ?)",
-        [userid, commentContent, parent_id]
+        "insert into project_comments (userid, content, parent_article_id, ancestor_article_id) values (?, ?, ?, ?)",
+        [userid, commentContent, parent_id, anc_id]
+    );
+
+    commentData.id = article_insert_result.insertId;
+
+    return commentData;
+}
+
+async function postNewCommentOnOtherComment(commentData) {
+    const db = await database;
+
+    const {userid, commentContent, parent_id, anc_id} = commentData;
+
+    const article_insert_result = await db.query(
+        "insert into project_comments (userid, content, parent_comment_id, ancestor_article_id) values (?, ?, ?, ?)",
+        [userid, commentContent, parent_id, anc_id]
     );
 
     commentData.id = article_insert_result.insertId;
@@ -148,20 +161,19 @@ async function getCommentsOnArticle(article_ID) {
     const sql = `
         SELECT * FROM (
             SELECT
-                project_articles.id AS article_id,
-                project_articles.title,
-                project_articles.userid,
-                project_articles.content,
-                project_articles.image_path,
-                project_articles.postTime,
-                project_articles.parent_article_id AS ancestorArticleID,
+                project_comments.id AS article_id,
+                project_comments.userid,
+                project_comments.content,
+                project_comments.postTime,
+                project_comments.parent_article_id,
+                project_comments.parent_comment_id,
+                project_comments.ancestor_article_id,
                 project_users.username,
                 project_users.fullName,
                 project_users.avatar
-            FROM project_articles
-            LEFT JOIN project_users ON project_articles.userid = project_users.id
+            FROM project_comments
+            LEFT JOIN project_users ON project_comments.userid = project_users.id
             WHERE parent_article_id = ?
-            AND project_articles.parent_article_id != project_articles.id
         ) AS commentsTable
         LEFT JOIN (
             SELECT
@@ -170,7 +182,7 @@ async function getCommentsOnArticle(article_ID) {
             FROM project_articles
             LEFT JOIN project_users ON project_articles.userid = project_users.id
         ) AS ancestorTable 
-        ON ancestorTable.ancestorID = commentsTable.ancestorArticleID
+        ON ancestorTable.ancestorID = commentsTable.ancestor_article_id
     `;
 
     try {
@@ -181,6 +193,44 @@ async function getCommentsOnArticle(article_ID) {
         throw error;
     }
 
+}
+
+async function getCommentsOnOtherComment(parentCommentID) {
+    const db = await database;
+    const sql = `
+        SELECT * FROM (
+                          SELECT
+                              project_comments.id AS article_id,
+                              project_comments.userid,
+                              project_comments.content,
+                              project_comments.postTime,
+                              project_comments.parent_article_id,
+                              project_comments.parent_comment_id,
+                              project_comments.ancestor_article_id,
+                              project_users.username,
+                              project_users.fullName,
+                              project_users.avatar
+                          FROM project_comments
+                                   LEFT JOIN project_users ON project_comments.userid = project_users.id
+                          WHERE parent_comment_id = ?
+                      ) AS commentsTable
+                          LEFT JOIN (
+            SELECT
+                project_articles.id AS ancestorID,
+                project_articles.userid AS ancestorUserID
+            FROM project_articles
+                     LEFT JOIN project_users ON project_articles.userid = project_users.id
+        ) AS ancestorTable
+                                    ON ancestorTable.ancestorID = commentsTable.ancestor_article_id
+    `;
+
+    try {
+        const rows = await db.query(sql, [parentCommentID]);
+        return rows;  // Return the fetched results
+    } catch (error) {
+        console.error("Error fetching comments with ancestors:", error);
+        throw error;
+    }
 }
 
 async function deleteArticle(article_id) {
@@ -203,5 +253,7 @@ module.exports = {
     updateArticle,
     postNewComment,
     getCommentsOnArticle,
-    deleteArticle
+    deleteArticle,
+    postNewCommentOnOtherComment,
+    getCommentsOnOtherComment
 }

@@ -19,8 +19,6 @@ router.post("/showArticles", async function (req, res) {
     const {filters} = req.body;
     const {sorts} = req.body;
 
-
-
     if (filters.filterByUser) {
         filters.filterUserId = req.session.user.id;
     }
@@ -109,21 +107,49 @@ router.post("/edit", middleware.verifyAuthenticated, async function (req, res) {
 
 router.post("/comment", middleware.verifyAuthenticated, async function (req, res) {
 
-    const {parent_id, commentContent} = req.body;
+    const {parent_id, commentContent, anc_id} = req.body;
     const userid = req.session.user.id;
-    const result = await articlesDao.postNewComment({userid, commentContent, parent_id})
+    const result = await articlesDao.postNewComment({userid, commentContent, parent_id, anc_id})
+
+    res.redirect("/home");
+})
+
+router.post("/commentOnComment", middleware.verifyAuthenticated, async function (req, res) {
+
+    const {parent_id, commentContent, anc_id} = req.body;
+    const userid = req.session.user.id;
+    const result = await articlesDao.postNewCommentOnOtherComment({userid, commentContent, parent_id, anc_id})
 
     res.redirect("/home");
 })
 
 router.get("/comment/:articleId", async function (req, res) {
     const { articleId } = req.params;
-    const articles = await articlesDao.getCommentsOnArticle(articleId)
+    const comments = await articlesDao.getCommentsOnArticle(articleId)
 
-    if (articles.length < 1) {
+    if (comments.length < 1) {
         res.send(false)
     } else {
-        const commentsWithUserID = insertInformation(req, articles)
+        const commentsWithUserID = insertInformation(req, comments)
+
+        res.render("partials/comments", {commentsWithUserID, layout: false}, function (err, renderedArticles) {
+            if (err) {
+                console.error("Error rendering articles partial:", err);
+                return res.status(500).send("Error rendering comments");
+            }
+            res.send(renderedArticles);
+        });
+    }
+})
+
+router.get("/commentOnComment/:parentCommentID", async function (req, res) {
+    const { parentCommentID } = req.params;
+    const comments = await articlesDao.getCommentsOnOtherComment(parentCommentID)
+
+    if (comments.length < 1) {
+        res.send(false)
+    } else {
+        const commentsWithUserID = insertInformation(req, comments)
 
         res.render("partials/comments", {commentsWithUserID, layout: false}, function (err, renderedArticles) {
             if (err) {

@@ -121,7 +121,7 @@
 
         const articleCards = document.querySelectorAll('.articlesCard');
         articleCards.forEach(async function(articleCard) {
-            await insertComments(articleCard, articleCard.dataset.articleId)
+            await insertComments(articleCard, articleCard.dataset.articleId, 'comment')
         })
 
         {{#if user}}
@@ -178,9 +178,17 @@
 
     })
 
-    async function loadCommentClicked (articleID) {
-        const articleCard = document.querySelector(`#article-${articleID}`)
-        await insertComments(articleCard, articleID)
+    async function loadCommentClicked(articleID, commentOnComment) {
+        let articleCard
+        let route
+        if (commentOnComment){
+            articleCard = document.querySelector(`#comment-${articleID}`)
+            route = 'commentOnComment'
+        } else {
+            articleCard = document.querySelector(`#article-${articleID}`)
+            route = 'comment'
+        }
+        await insertComments(articleCard, articleID, route)
     }
 
     async function editClicked(articleId) {
@@ -288,8 +296,9 @@
         }
     }
 
-    async function insertComments(articleCard, articleID) {
-        const response = await fetch(`/api/comment/${articleID}`)
+    async function insertComments(articleCard, articleID, route) {
+
+        const response = await fetch(`/api/${route}/${articleID}`)
         const content = await response.text()
 
         const underlyingCommentBox = articleCard.querySelector('.commentsViewBox')
@@ -302,7 +311,6 @@
         underlyingCommentBox.innerHTML = content
         underlyingCommentBox.classList.add('p-2')
 
-        underlyingCommentBox.dataset.ancestorId = underlyingCommentBox.parentElement.dataset.ancestorId
     }
 </script>
 

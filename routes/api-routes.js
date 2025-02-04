@@ -112,14 +112,20 @@ router.post("/edit", middleware.verifyAuthenticated, async function (req, res) {
     const {title, content, image_path, article_id} = req.body;
     const currentUser = req.session.user.id;
 
+    let imageUpdate = true
+    if (image_path===""){
+        imageUpdate = false
+    }
+
+
     if (!await checkAuthorityAsAuthor(req, article_id)){
         return res.status(400).json({ error: "Unauthorized" });
     } else {
-        const updated = await articlesDao.updateArticle(article_id, currentUser, title, content, image_path)
+        const updated = await articlesDao.updateArticle(article_id, currentUser, title, content, image_path, imageUpdate)
         if (updated) {
             res.redirect(`/home`);
         } else {
-            res.status(403).json({ success: false, message: "Failed to update article. Permission denied or invalid article ID." });
+            res.status(403).json({ success: false, message: "Permission denied" });
         }
     }
 

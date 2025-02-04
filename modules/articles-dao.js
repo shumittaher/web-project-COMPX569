@@ -104,16 +104,31 @@ async function getArticleById(article_id) {
     return result[0]
 }
 
-async function updateArticle(articleId, userId, title, content, imagePath) {
+async function updateArticle(articleId, userId, title, content, imagePath, imageUpdate) {
     const db = await database;
+    let sql
+    let values
 
-    const sql = `
+    if (imageUpdate) {
+
+        sql = `
         UPDATE project_articles
         SET title = ?, content = ?, image_path = ?, postTime = NOW()
         WHERE id = ? AND userid = ?
-    `;
+        `;
 
-    const values = [title, content, imagePath, articleId, userId];
+        values = [title, content, imagePath, articleId, userId];
+
+    } else {
+
+        sql = `
+        UPDATE project_articles
+        SET title = ?, content = ?, postTime = NOW()
+        WHERE id = ? AND userid = ?
+        `;
+
+        values = [title, content, articleId, userId];
+    }
 
     try {
         const result = await db.query(sql, values);

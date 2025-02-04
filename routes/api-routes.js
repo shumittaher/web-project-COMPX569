@@ -246,7 +246,8 @@ function insertAncInformation(req, comments){
         }
         return {
             ...comment,
-            isAncestor: comment.ancestorUserID === currentUserID
+            isAncestor: comment.ancestorUserID === currentUserID,
+            isAuthorizedToDelete: comment.ancestorUserID === currentUserID || comment.isAuthor,
         };
     });
 }

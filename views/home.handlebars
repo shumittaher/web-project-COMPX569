@@ -138,8 +138,6 @@
                 })
             }
 
-
-
             function setLiked(articleID, isLiked) {
                 const likeButton = document.querySelector(`#like-status-${articleID} .addLikeButton`);
                 const removeLikeButton = document.querySelector(`#like-status-${articleID} .removeLikeButton`)
@@ -168,10 +166,14 @@
                 }
             }
 
-
         {{/if}}
 
     })
+
+    async function loadCommentClicked (articleID) {
+        const articleCard = document.querySelector(`#article-${articleID}`)
+        await insertComments(articleCard, articleID)
+    }
 
     async function editClicked(articleId, userId) {
 
@@ -186,7 +188,6 @@
         const editModal = new bootstrap.Modal(document.querySelector("#editArticleModal"));
         editModal.show();
     }
-
 
     function setNewArticleFormAnimationLogic(){
         const post_form_collapse = document.querySelector('#post_form_collapse')
@@ -205,7 +206,7 @@
         })
     }
 
-    function setSortingListeners(){
+    function setSortingListeners() {
 
         {{#if user}}
             setNewArticleFormAnimationLogic()

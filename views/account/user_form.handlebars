@@ -107,11 +107,8 @@
 
         {{#if isEdit}}
             const user = {{#if user}} {{{json user}}} {{else}} null {{/if}};
-        {{/if}}
-
-        if (user) {
             prefillEditBox()
-        }
+        {{/if}}
 
         function prefillEditBox() {
             setInputValue(usernameField, user.username);
@@ -165,6 +162,7 @@
 
         avatarImages.forEach(img => {
             img.addEventListener("click", function () {
+                console.log("hit")
                 avatarImages.forEach(i => i.style.outline = "none");
                 this.style.outline = "3px solid lightblue";
                 selectedAvatarInput.value = this.getAttribute("data-avatar");

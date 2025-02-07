@@ -264,6 +264,17 @@ async function deleteComment(comment_id) {
     )
 }
 
+async function getLikeCounts(article_id) {
+    const db = await database;
+
+    const result = await db.query(`
+       Select COUNT(userid) AS like_count
+       from project_article_likes where article_id = ?
+    `, [article_id])
+
+    return result[0]?.like_count || 0;
+}
+
 
 module.exports = {
     postNew,

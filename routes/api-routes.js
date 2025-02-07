@@ -280,4 +280,15 @@ function deleteImageByPath(fullPath) {
     });
 }
 
+router.get("/getLikeCount/:article_id", async function (req, res) {
+    try {
+        const article_id = req.params.article_id
+        const likeCount = await articlesDao.getLikeCounts(article_id);
+        res.json({ article_id, like_count: likeCount });
+    } catch (error) {
+        console.error("Error fetching like count:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+})
+
 module.exports = router;

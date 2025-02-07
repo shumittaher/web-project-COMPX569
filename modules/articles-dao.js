@@ -289,5 +289,6 @@ module.exports = {
     deleteArticle,
     postNewCommentOnOtherComment,
     getCommentsOnOtherComment,
-    deleteComment
+    deleteComment,
+    getLikeCounts
 }

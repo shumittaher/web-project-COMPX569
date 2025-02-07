@@ -16,47 +16,56 @@
         </div>
     </div>
 
-    {{#if this.userLoggedIn}}
-    <div class="card-footer d-flex justify-content-between">
+    <div class="card-footer d-flex justify-content-between align-items-center">
+
         <div id="like-status-{{this.article_id}}" class="d-flex align-items-center opacity-0 likeButtonsBox">
-            <button data-likeAction="true" class="btn btn-outline-primary addLikeButton">
-                <span>👍</span>
-                <span>Like </span>
-            </button>
-            <button data-likeAction="false" class="btn btn-primary removeLikeButton">
-                <span>❤️</span>
-                <span>Liked</span>
-            </button>
-        </div>
 
-        <div class="d-flex align-items-center justify-content-between align-items-center">
-
-            {{#if this.isAuthor}}
-            <div class="mx-1">
-                <button onClick="editClicked({{this.article_id}})" class="btn btn-danger">
-                    ✏️ Edit This
+            {{#if this.userLoggedIn}}
+                <button data-likeAction="true" class="btn btn-outline-primary addLikeButton">
+                    <span>👍</span>
+                    <span>Like </span>
                 </button>
-            </div>
-
-            <div class="mx-1">
-                <button onClick="deleteClicked({{this.article_id}})" class="btn btn-danger">
-                    🗑️ Delete
+                <button data-likeAction="false" class="btn btn-primary removeLikeButton">
+                    <span>❤️</span>
+                    <span>Liked</span>
                 </button>
-            </div>
             {{/if}}
 
-            <div class="ms-1 commentBox">
-                <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#commentOnArticle-{{this.article_id}}">
-                    ️🗨️ Comment
-                </button>
-            </div>
+
         </div>
 
+        <div class="ms-3 d-inline-flex flex-grow-1 text-lg fw-bold fs-4" id="like-count-{{this.article_id}}"></div>
+
+
+        {{#if this.userLoggedIn}}
+
+            <div class="d-flex align-items-center justify-content-between align-items-center">
+
+                {{#if this.isAuthor}}
+                <div class="mx-1">
+                    <button onClick="editClicked({{this.article_id}})" class="btn btn-danger">
+                        ✏️ Edit This
+                    </button>
+                </div>
+
+                <div class="mx-1">
+                    <button onClick="deleteClicked({{this.article_id}})" class="btn btn-danger">
+                        🗑️ Delete
+                    </button>
+                </div>
+                {{/if}}
+
+                <div class="ms-1 commentBox">
+                    <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#commentOnArticle-{{this.article_id}}">
+                        ️🗨️ Comment
+                    </button>
+                </div>
+            </div>
+
+        {{/if}}
 
     </div>
 
-    {{/if}}
-    <span class="ms-3" id="like-count-{{this.article_id}}"></span>
 
 
     <div id="commentOnArticle-{{this.article_id}}" class="collapse">

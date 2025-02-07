@@ -153,7 +153,9 @@
         const articleCards = document.querySelectorAll('.articlesCard');
         articleCards.forEach(async function(articleCard) {
             await insertComments(articleCard, articleCard.dataset.articleId, 'comment')
+            await refreshLikeCount(articleCard.dataset.articleId);
         })
+
 
         {{#if user}}
             updateArticleDetails(articleCards);
@@ -166,7 +168,6 @@
                     const response = await fetchLikeStatus(articleID, userID)
                     const isLiked = response.userLikedThis
                     setLiked(articleID, isLiked)
-                    await refreshLikeCount(articleID);
 
                     document.querySelectorAll(`#like-status-${articleID} button`).forEach( (button)=> {
                         button.addEventListener('click', function() {
@@ -213,11 +214,10 @@
 
     async function refreshLikeCount(articleId) {
         const likeCountSpace = document.querySelector(`#like-count-${articleId}`);
-
         const response = await fetch(`/api/getLikeCount/${articleId}`)
         if (response.status === 200) {
             const data = await response.json();
-            likeCountSpace.innerText = data.like_count
+            likeCountSpace.innerText = "⬆️ " + data.like_count
         }
     }
 

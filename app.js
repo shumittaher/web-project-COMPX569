@@ -8,7 +8,7 @@ const path = require("path");
 
 
 // Listen port will be loaded from .env file, or use 3000
-const port = process.env.EXPRESS_PORT || 3000;
+const port = process.env.EXPRESS_PORT || 8080;
 
 // Setup Handlebars
 app.engine("handlebars", handlebars.create({

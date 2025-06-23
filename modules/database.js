@@ -8,6 +8,7 @@ const DB_NAME = process.env.DB_NAME;
 const database = mariadb.createPool({
     host: HOST,
     database: DB_NAME,
+    port: 3306,
     user: USER_NAME,
     password: USER_PASS,
     connectionLimit: 10,

@@ -4,11 +4,12 @@ const USER_NAME = process.env.USER_NAME;
 const USER_PASS = process.env.USER_PASS;
 const HOST = process.env.HOST;
 const DB_NAME = process.env.DB_NAME;
+const PORT = process.env.DB_PORT;
 
 const database = mariadb.createPool({
     host: HOST,
     database: DB_NAME,
-    port: 3306,
+    port: PORT || 3306,
     user: USER_NAME,
     password: USER_PASS,
     connectionLimit: 10,

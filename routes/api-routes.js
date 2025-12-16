@@ -13,17 +13,31 @@ const {Jimp} = require("jimp");
 
 
 router.post("/uploadImage", upload.single("imageFile"), async (req, res) => {
-    if (!req.file) {
-        return res.status(400).json({ error: "No file uploaded" });
-    }
-    const fileInfo = req.file;
-    const oldFileName = fileInfo.path;
+    try {
+        if (!req.file) {
+            return res.status(400).json({ error: "No file uploaded" });
+        }
+        const fileInfo = req.file;
+        const oldFileName = fileInfo.path;
 
-    let image = await Jimp.read(`${oldFileName}`);
-    image.resize({ w: 650 });
-    await image.write(`./public/uploadedFiles/${fileInfo.originalname}`);
-    deleteImageByPath(oldFileName);
-    res.status(200)
+        let image = await Jimp.read(`${oldFileName}`);
+        image.resize({ w: 650 });
+        
+        const imageId = await articlesDao.createImage({
+            mime_type: image.mime,
+            original_filename: fileInfo.originalname,
+            byte_size: image.bitmap.data.length,
+            width: image.bitmap.width,
+            height: image.bitmap.height,
+            image_data: image.bitmap.data
+        });
+
+        deleteImageByPath(oldFileName);
+        res.status(200).json({ imageId });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ error: "Image upload failed" });
+    }
 })
 
 router.post("/new", middleware.verifyAuthenticated, async function (req, res) {

@@ -6,6 +6,13 @@ const HOST = process.env.HOST;
 const DB_NAME = process.env.DB_NAME;
 const PORT = process.env.DB_PORT || 3306;
 
+console.log("DB CONFIG:", {
+  host: process.env.HOST,
+  port: process.env.DB_PORT,
+  db: process.env.DB_NAME,
+  user: process.env.USER_NAME,
+});
+
 const database = mariadb.createPool({
     host: HOST,
     database: DB_NAME,

@@ -3,11 +3,11 @@ const database = require("./database.js");
 async function postNew(articleData) {
     const db = await database;
 
-    const {userid, title, content, image_path} = articleData;
+    const { userid, title, content, image_id } = articleData;
 
     const article_insert_result = await db.query(
-        "insert into project_articles (userid, title, content, image_path) values (?, ?, ?, ?)",
-        [userid, title, content, image_path]
+        "INSERT INTO project_articles (userid, title, content, image_id) VALUES (?, ?, ?, ?)",
+        [userid, title, content, image_id || null]
     );
 
     articleData.id = article_insert_result.insertId;
@@ -28,35 +28,48 @@ async function postUpdate(articleNumber) {
 async function getArticles(filters, sorts) {
     const db = await database;
 
-    const { filterByUser, filterUserId } = filters
+    const { filterByUser, filterUserId } = filters;
     const { sortSelectState, sortTypeState } = sorts;
+
+    const allowedSortCols = new Set([
+        "project_articles.postTime",
+        "project_articles.title",
+        "project_articles.id"
+    ]);
+    const allowedSortDir = new Set(["ASC", "DESC"]);
 
     let query =
         `SELECT 
             project_articles.id AS article_id, 
             project_articles.title,
             project_articles.userid,
-            project_articles.content, 
-            project_articles.image_path, 
+            project_articles.content,
+            project_articles.image_id,
+            CASE 
+              WHEN project_articles.image_id IS NULL THEN NULL
+              ELSE CONCAT('/api/images/', project_articles.image_id)
+            END AS image_path,
             project_articles.postTime, 
             project_users.username, 
             project_users.fullName, 
             project_users.avatar
         FROM project_articles  
         LEFT JOIN project_users ON project_articles.userid = project_users.id 
-        LEFT JOIN project_article_likes ON project_articles.id = project_article_likes.article_id `
+        LEFT JOIN project_article_likes ON project_articles.id = project_article_likes.article_id `;
+
+    const values = [];
 
     if (filterByUser) {
-        query += ` WHERE project_articles.userid = ${filterUserId} `;
+        query += ` WHERE project_articles.userid = ? `;
+        values.push(filterUserId);
     }
 
-    if (sortSelectState !== '') {
-        query += ` ORDER BY ${sortSelectState} ${sortTypeState} `;
+    if (sortSelectState && allowedSortCols.has(sortSelectState)) {
+        const dir = allowedSortDir.has(sortTypeState) ? sortTypeState : "DESC";
+        query += ` ORDER BY ${sortSelectState} ${dir} `;
     }
 
-    return await db.query(
-        query
-    )
+    return await db.query(query, values);
 }
 
 async function getUserLikesArticle(article_id, userid) {
@@ -104,39 +117,30 @@ async function getArticleById(article_id) {
     return result[0]
 }
 
-async function updateArticle(articleId, userId, title, content, imagePath, imageUpdate) {
+async function updateArticle(articleId, userId, title, content, imageId, imageUpdate) {
     const db = await database;
-    let sql
-    let values
+
+    let sql;
+    let values;
 
     if (imageUpdate) {
-
         sql = `
-        UPDATE project_articles
-        SET title = ?, content = ?, image_path = ?, postTime = NOW()
-        WHERE id = ? AND userid = ?
+            UPDATE project_articles
+            SET title = ?, content = ?, image_id = ?, postTime = NOW()
+            WHERE id = ? AND userid = ?
         `;
-
-        values = [title, content, imagePath, articleId, userId];
-
+        values = [title, content, imageId || null, articleId, userId];
     } else {
-
         sql = `
-        UPDATE project_articles
-        SET title = ?, content = ?, postTime = NOW()
-        WHERE id = ? AND userid = ?
+            UPDATE project_articles
+            SET title = ?, content = ?, postTime = NOW()
+            WHERE id = ? AND userid = ?
         `;
-
         values = [title, content, articleId, userId];
     }
 
-    try {
-        const result = await db.query(sql, values);
-        return result.affectedRows > 0;
-    } catch (error) {
-        console.error("Error updating article:", error);
-        throw error;
-    }
+    const result = await db.query(sql, values);
+    return result.affectedRows > 0;
 }
 
 async function postNewComment(commentData) {
@@ -275,6 +279,43 @@ async function getLikeCounts(article_id) {
     return result[0]?.like_count || 0;
 }
 
+async function createImage({ mime_type, original_filename, byte_size, width, height, image_data }) {
+    const db = await database;
+
+    const result = await db.query(
+        `INSERT INTO project_images
+         (mime_type, original_filename, byte_size, width, height, image_data)
+         VALUES (?, ?, ?, ?, ?, ?)`,
+        [mime_type, original_filename, byte_size, width, height, image_data]
+    );
+
+    return Number(result.insertId);
+}
+
+async function getImageById(imageId) {
+    const db = await database;
+
+    const rows = await db.query(
+        `SELECT id, mime_type, image_data
+         FROM project_images
+         WHERE id = ?
+         LIMIT 1`,
+        [imageId]
+    );
+
+    return rows[0] || null;
+}
+
+async function deleteImageById(imageId) {
+    const db = await database;
+
+    const result = await db.query(
+        `DELETE FROM project_images WHERE id = ?`,
+        [imageId]
+    );
+
+    return result.affectedRows > 0;
+}
 
 module.exports = {
     postNew,
@@ -290,5 +331,8 @@ module.exports = {
     postNewCommentOnOtherComment,
     getCommentsOnOtherComment,
     deleteComment,
-    getLikeCounts
+    getLikeCounts,
+    createImage,
+    getImageById,
+    deleteImageById,
 }

@@ -12,15 +12,10 @@ const upload = multer({
 const {Jimp} = require("jimp");
 
 
-router.post("/uploadImage", upload.single("imageFile"), async (req, res) => {
+const uploadImage = async (fileInfo) => {
     try {
-        if (!req.file) {
-            return res.status(400).json({ error: "No file uploaded" });
-        }
-        const fileInfo = req.file;
-        const oldFileName = fileInfo.path;
-
-        let image = await Jimp.read(`${oldFileName}`);
+        
+        let image = await Jimp.read(`${fileInfo.path}`);
         image.resize({ w: 650 });
         
         const imageId = await articlesDao.createImage({
@@ -32,19 +27,23 @@ router.post("/uploadImage", upload.single("imageFile"), async (req, res) => {
             image_data: image.bitmap.data
         });
 
-        deleteImageByPath(oldFileName);
-        res.status(200).json({ imageId });
+        return imageId;
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ error: "Image upload failed" });
+        return null;
     }
-})
+}
 
-router.post("/new", middleware.verifyAuthenticated, async function (req, res) {
+router.post("/new", middleware.verifyAuthenticated, upload.single("imageFile"), async function (req, res) {
 
-    const {title, content, image_path} = req.body;
+    const {title, content} = req.body;
     const userid = req.session.user.id;
-    const result = await articlesDao.postNew({userid, title, content, image_path})
+    let image_id = null;
+    if (req.file) {
+        image_id = await uploadImage(req.file);
+        deleteImageByPath(req.file.path);
+    }
+    const result = await articlesDao.postNew({userid, title, content, image_id})
 
     res.redirect("/home");
 })

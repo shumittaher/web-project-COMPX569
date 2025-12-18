@@ -40,6 +40,16 @@ const uploadImage = async (fileInfo) => {
   }
 };
 
+const deleteImageByPath = (fullPath) => {
+  fs.unlink(fullPath, (err) => {
+    if (err) {
+      console.error("Error deleting file:", err);
+    } else {
+      console.log("File deleted successfully");
+    }
+  });
+}
+
 router.post(
   "/new",
   middleware.verifyAuthenticated,
@@ -49,7 +59,6 @@ router.post(
     const userid = req.session.user.id;
     let image_id = null;
     if (req.file) {
-      console.log("Uploading image...", req.file);
       image_id = await uploadImage(req.file);
       deleteImageByPath(req.file.path);
     }
@@ -143,28 +152,42 @@ router.get("/article/:articleId", async function (req, res) {
   res.json(result);
 });
 
-router.post("/edit", middleware.verifyAuthenticated, async function (req, res) {
-  const { title, content, image_path, article_id } = req.body;
+router.post("/edit", 
+  middleware.verifyAuthenticated, 
+  upload.single("imageFile"), 
+  async function (req, res) {
+  const { title, content, article_id, keepImage } = req.body;
   const currentUser = req.session.user.id;
 
-  let imageUpdate = true;
-  if (image_path === "") {
-    imageUpdate = false;
-  } else {
-    await deleteImage(article_id);
-  }
-
   if (!(await checkAuthorityAsAuthor(req, article_id))) {
+
     return res.status(400).json({ error: "Unauthorized" });
+  
   } else {
+
+    let imageUpdate = false;
+    let image_id = null;
+
+    if (!keepImage) {  //if the user does not want to keep the existing image
+      if (req.file) { //file given, replace existing image with new one
+        imageUpdate = true;
+        image_id = await uploadImage(req.file);
+        deleteImageByPath(req.file.path);
+      } else { //no file given, remove existing image
+        imageUpdate = true;
+        await deleteImage(article_id);
+      }
+    }
+
     const updated = await articlesDao.updateArticle(
       article_id,
       currentUser,
       title,
       content,
-      image_path,
+      image_id,
       imageUpdate
     );
+
     if (updated) {
       res.redirect(`/home`);
     } else {
@@ -322,30 +345,10 @@ async function checkAuthorityAsAuthor(req, article_id) {
 
 async function deleteImage(article_id) {
   const underlyingArticle = await articlesDao.getArticleById(article_id);
-  if (
-    underlyingArticle.image_path === "" ||
-    underlyingArticle.image_path === null
-  ) {
+  if (!underlyingArticle.image_id) {
     return;
   }
-  const fullPath = path.join(
-    __dirname,
-    "..",
-    "public",
-    "uploadedFiles",
-    underlyingArticle.image_path
-  );
-  deleteImageByPath(fullPath);
-}
-
-function deleteImageByPath(fullPath) {
-  fs.unlink(fullPath, (err) => {
-    if (err) {
-      console.error("Error deleting file:", err);
-    } else {
-      console.log("File deleted successfully");
-    }
-  });
+  articlesDao.deleteImageById(underlyingArticle.image_id);
 }
 
 router.get("/getLikeCount/:article_id", async function (req, res) {
@@ -367,7 +370,6 @@ router.get("/images/:imageId", async (req, res) => {
     const img = await articlesDao.getImageById(imageId);
     if (!img) return res.status(404).send("Not found");
 
-    console.log(`Serving image id ${imageId} with mime type ${img.mime_type}`);
     res.setHeader("Content-Type", img.mime_type);
     return res.send(img.image_data); // sends Buffer
   } catch (err) {

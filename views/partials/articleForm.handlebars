@@ -32,7 +32,18 @@
 
         <div class="form-group d-flex align-items-center">
             <label for="{{#if existingArticle}}edit-{{/if}}image" class="mx-3 w-25 text-end">Upload Image</label>
+            <div class="w-100" >
             <input id="{{#if existingArticle}}edit-{{/if}}image" class="form-control imageUploader" type="file" name="imageFile" accept=".png,.jpg,.jpeg,.bmp">
+
+            {{#if existingArticle}}
+            <div class="form-check w-25 mt-1">
+                <input class="form-check-input" type="checkbox" id="keepImageCheckBox" name="keepImage" checked>
+                <label class="form-check-label" for="keepImageCheckBox">
+                    Keep existing image
+                </label>
+            </div>
+            {{/if}}        </div>
+
         </div>
 
     </div>

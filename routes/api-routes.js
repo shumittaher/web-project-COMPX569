@@ -14,7 +14,10 @@ const { Jimp } = require("jimp");
 const uploadImage = async (fileInfo) => {
   try {
     let image = await Jimp.read(fileInfo.path);
-    image.resize({ w: 650 });
+    // Only shrink if wider than 650px
+    if (image.bitmap.width > 650) {
+      image.resize({ w: 650 });
+    }
 
     const mime = image.mime;
 

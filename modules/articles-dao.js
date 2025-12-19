@@ -28,15 +28,8 @@ async function postUpdate(articleNumber) {
 async function getArticles(filters, sorts) {
     const db = await database;
 
-    const { filterByUser, filterUserId } = filters;
+    const { filterByUser, filterUserId } = filters
     const { sortSelectState, sortTypeState } = sorts;
-
-    const allowedSortCols = new Set([
-        "project_articles.postTime",
-        "project_articles.title",
-        "project_articles.id"
-    ]);
-    const allowedSortDir = new Set(["ASC", "DESC"]);
 
     let query =
         `SELECT 
@@ -55,21 +48,16 @@ async function getArticles(filters, sorts) {
             project_users.avatar
         FROM project_articles  
         LEFT JOIN project_users ON project_articles.userid = project_users.id 
-        LEFT JOIN project_article_likes ON project_articles.id = project_article_likes.article_id `;
-
-    const values = [];
-
+        `;
     if (filterByUser) {
-        query += ` WHERE project_articles.userid = ? `;
-        values.push(filterUserId);
+        query += ` WHERE project_articles.userid = ${filterUserId} `;
     }
 
-    if (sortSelectState && allowedSortCols.has(sortSelectState)) {
-        const dir = allowedSortDir.has(sortTypeState) ? sortTypeState : "DESC";
-        query += ` ORDER BY ${sortSelectState} ${dir} `;
+    if (sortSelectState !== '') {
+        query += ` ORDER BY ${sortSelectState} ${sortTypeState} `;
     }
 
-    return await db.query(query, values);
+    return await db.query(query);
 }
 
 async function getUserLikesArticle(article_id, userid) {

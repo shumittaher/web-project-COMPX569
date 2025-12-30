@@ -29,6 +29,8 @@ CREATE TABLE IF NOT EXISTS project_articles
     title VARCHAR(32),
     content TEXT not null,
     image_id int(11) DEFAULT NULL,
+    ai_summary TEXT DEFAULT NULL,
+    ai_summary_updated_at DATETIME DEFAULT NULL,
     FOREIGN KEY (userid) REFERENCES project_users(id) ON DELETE CASCADE
     FOREIGN KEY (image_id) REFERENCES project_images(id) ON DELETE SET NULL
 );

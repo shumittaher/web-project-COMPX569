@@ -1,7 +1,7 @@
 <div id="article-{{this.article_id}}" class="articlesCard card mb-3" data-article-id="{{this.article_id}}" data-user-id="{{this.userid}}">
 
     <div class="card-body">
-        <img class="avatar-img mx-3 position-absolute end-0" src="public/avatarImages/{{this.avatar}}">
+        <img class="avatar-img mx-3 img-fluid float-end" src="public/avatarImages/{{this.avatar}}">
         <h5 class="card-title">{{this.title}}</h5>
         <small class="text-muted">Posted by {{this.fullName}}</small><br>
         <small class="text-muted">{{this.postTime}}</small>
@@ -9,13 +9,31 @@
 
         {{#if this.image_path}}
             <img src="{{this.image_path}}" alt="Article Image" onerror="this.onerror=null; this.src='public/placeholder.jpg';"
-                 class="img-fluid float-end ms-3 mb-3 article-image">
+            class="img-fluid float-end ms-3 mb-3 article-image">
         {{/if}}
         <div class="card-text mt-3">
             {{{this.content}}}
         </div>
     </div>
 
+        {{#if this.ai_summary}}
+        <div class="px-3">
+            <div class="alert alert-info border-0 shadow-sm p-3">
+            <div class="d-flex align-items-center justify-content-between">
+                <h6 class="mb-0 fw-bold">
+                🤖 AI Summary
+                </h6>
+                <span class="badge text-bg-info">Auto</span>
+            </div>
+
+            <hr class="my-2">
+
+            <p class="mb-0 text-body" style="white-space: pre-line;">
+                {{{this.ai_summary}}}
+            </p>
+            </div>
+        </div>
+        {{/if}}
     <div class="card-footer d-flex justify-content-between align-items-center">
 
         <div id="like-status-{{this.article_id}}" class="d-flex align-items-center opacity-0 likeButtonsBox">
@@ -43,7 +61,7 @@
 
                 {{#if this.isAuthor}}
                 <div class="mx-1">
-                    <button onClick="editClicked({{this.article_id}})" class="btn btn-danger">
+                    <button onClick="editClicked({{this.article_id}})" class="btn btn-warning">
                         ✏️ Edit This
                     </button>
                 </div>
@@ -51,6 +69,12 @@
                 <div class="mx-1">
                     <button onClick="deleteClicked({{this.article_id}})" class="btn btn-danger">
                         🗑️ Delete
+                    </button>
+                </div>
+
+                <div class="mx-1">
+                    <button onClick="aiSummaryClicked({{this.article_id}})" class="btn btn-info">
+                        🤖 AI Summary
                     </button>
                 </div>
                 {{/if}}

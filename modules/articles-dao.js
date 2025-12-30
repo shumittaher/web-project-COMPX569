@@ -38,6 +38,8 @@ async function getArticles(filters, sorts) {
             project_articles.userid,
             project_articles.content,
             project_articles.image_id,
+            project_articles.ai_summary,
+            project_articles.ai_summary_updated_at,
             CASE 
               WHEN project_articles.image_id IS NULL THEN NULL
               ELSE CONCAT('/api/images/', project_articles.image_id)
@@ -128,6 +130,18 @@ async function updateArticle(articleId, userId, title, content, imageId, imageUp
     }
 
     const result = await db.query(sql, values);
+    return result.affectedRows > 0;
+}
+
+async function addAIDataToArticle(articleId, aiSummary) {
+    const db = await database;
+    
+    const result = await db.query(
+        `UPDATE project_articles
+            SET ai_summary = ?, ai_summary_updated_at = NOW()
+            WHERE id = ?`,
+            [aiSummary, articleId]
+        );  
     return result.affectedRows > 0;
 }
 
@@ -323,4 +337,5 @@ module.exports = {
     createImage,
     getImageById,
     deleteImageById,
+    addAIDataToArticle
 }

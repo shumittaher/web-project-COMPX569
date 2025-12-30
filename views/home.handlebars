@@ -258,6 +258,23 @@
         }
     }
 
+    async function aiSummaryClicked(articleId){
+
+        try {
+            const response = await fetch(`/api/ai/aiSummary/${articleId}`);
+            const data = await response.json()
+
+            if (!response.ok) {
+                throw new Error(data?.error || "Failed to generate summary");
+            }
+
+        } catch (err) {
+            console.error(err);
+            alert(err.message);
+        }
+    }
+
+
     async function deleteCommentClicked(commentId){
 
         const response = await fetch(`/api/deleteComment/${commentId}`);

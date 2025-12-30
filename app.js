@@ -45,6 +45,9 @@ app.use("/account", account);
 const api = require("./routes/api-routes.js");
 app.use("/api", api);
 
+const ai = require("./routes/ai-routes.js");
+app.use("/api/ai", ai);
+
 const appRouter = require("./routes/application-routes.js");
 app.use(appRouter);
 

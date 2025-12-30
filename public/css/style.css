@@ -48,7 +48,13 @@
 }
 
 .article-image {
-    max-width: 550px;
-    max-height: 550px;
     object-fit: contain;
+    width: 50%;
+    height: auto;
+}
+
+@media (max-width: 768px) { 
+    .article-image {
+        width: 100%;
+    }
 }

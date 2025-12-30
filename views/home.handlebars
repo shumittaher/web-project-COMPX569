@@ -258,24 +258,39 @@
         }
     }
 
-    async function aiSummaryClicked(articleId){
+    async function aiSummaryClicked(articleId) {
+        const btn = document.getElementById(`aiSummaryBtn-${articleId}`);
+        const originalHtml = btn ? btn.innerHTML : "🤖 AI Summary";
 
         try {
-            const response = await fetch(`/api/ai/aiSummary/${articleId}`);
-            const data = await response.json()
-
-            if (!response.ok) {
-                throw new Error(data?.error || "Failed to generate summary");
+            if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = `
+                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Generating...
+            `;
             }
 
-            document.dispatchEvent(sortFilterChangedEvent)
+            const response = await fetch(`/api/ai/aiSummary/${articleId}`);
+            const data = await response.json();
+
+            if (!response.ok) {
+            throw new Error(data?.error || "Failed to generate summary");
+            }
+
+            document.dispatchEvent(sortFilterChangedEvent);
 
         } catch (err) {
             console.error(err);
             alert(err.message);
+
+        } finally {
+            if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalHtml;
+            }
         }
     }
-
 
     async function deleteCommentClicked(commentId){
 

@@ -73,9 +73,14 @@
                 </div>
 
                 <div class="mx-1">
-                    <button onClick="aiSummaryClicked({{this.article_id}})" class="btn btn-info">
-                        🤖 AI Summary
-                    </button>
+                <button
+                    id="aiSummaryBtn-{{this.article_id}}"
+                    onClick="aiSummaryClicked({{this.article_id}})"
+                    class="btn btn-info"
+                    type="button"
+                >
+                    🤖 AI Summary
+                </button>
                 </div>
                 {{/if}}
 

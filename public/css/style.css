@@ -47,14 +47,14 @@
     width: 6rem;
 }
 
-.article-image {
-    object-fit: contain;
-    width: 50%;
-    height: auto;
+.article-image{
+    width: 100%;
 }
 
-@media (max-width: 768px) { 
-    .article-image {
-        width: 100%;
-    }
+@media (min-width: 1000px) {
+  .article-image{
+    width: 50%;
+    border: 3px solid gray;
+    border-radius: 5px;
+  }
 }

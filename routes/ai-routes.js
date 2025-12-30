@@ -27,7 +27,6 @@ router.get("/aiSummary/:articleId", middleware.verifyAuthenticated, async (req, 
   try {
     // Load article (+ existing summary)
     const article = await articlesDao.getArticleById(articleId);
-    console.log(article);
     
     if (!article) {
       return res.status(404).json({ error: "Article not found" });
@@ -58,7 +57,7 @@ router.get("/aiSummary/:articleId", middleware.verifyAuthenticated, async (req, 
           type: "input_text",
           text: `
           Summarize this forum article in 1 paragraph.
-          Be concise, factual. If the image adds important context (diagram, screenshot, text), incorporate it.
+          Be concise, factual. If there is an image and it adds important context (diagram, screenshot, text), incorporate it.
           If the image seems decorative/irrelevant, ignore it.
 
           Title: ${article.title}

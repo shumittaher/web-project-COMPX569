@@ -1,6 +1,8 @@
 // Load a .env file if one exists
 require('dotenv').config()
 
+require("./config/firebaseAdmin.js");
+
 const express = require("express");
 const handlebars = require("express-handlebars");
 const app = express();
@@ -22,6 +24,11 @@ app.engine("handlebars", handlebars.create({
 }).engine);
 
 app.set("view engine", "handlebars");
+
+app.use((req, res, next) => {
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
+  next();
+});
 
 app.use("/bootstrap", express.static(__dirname + "/node_modules/bootstrap/dist"));
 app.use("/public", express.static(path.join(__dirname, "public")));

@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const admin = require("../config/firebaseAdmin.js");
 
 const userDao = require("../modules/users-dao.js");
 const {response} = require("express");
@@ -37,6 +38,25 @@ router.post("/login", async function (req, res) {
         }
     }
 })
+
+router.post("/firebase-login", async function (req, res) {
+    const { idToken } = req.body;
+    if (!idToken) {
+        return res.status(400).json({ error: "Missing ID token" });
+    }
+    try {
+        const decoded = await admin.auth().verifyIdToken(idToken);
+        let user = await userDao.getUserByFirebaseUid(decoded.uid);
+        if (!user) {
+            user = await userDao.createUserFromFirebase(decoded.uid, decoded.email, decoded.name);
+        }
+        req.session.user = user;
+        res.json({ success: true });
+    } catch (err) {
+        console.error("Firebase login error:", err);
+        res.status(401).json({ error: "Invalid token" });
+    }
+});
 
 router.get("/checkUserName", async function (req, res) {
     const checkName = req.query.username

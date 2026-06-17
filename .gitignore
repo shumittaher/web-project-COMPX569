@@ -14,3 +14,4 @@ jspm_packages/
 
 .env
 .env.test
+serviceAccountKey.json

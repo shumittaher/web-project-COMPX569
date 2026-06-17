@@ -23,8 +23,19 @@
         <input class="btn btn-primary btn-lg mt-4" type="submit" value="🔑 Login">
     </form>
 
-    <small class="text-muted">
+    <div class="my-3 text-muted">— or —</div>
+
+    <button id="google-login-btn" class="btn btn-outline-dark btn-lg w-100">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="20" class="me-2">
+        Sign in with Google
+    </button>
+
+    <p id="firebase-error" class="text-danger mt-2" style="display:none;"></p>
+
+    <small class="text-muted d-block mt-3">
         Don't have an account? <a href="/account/create">Register here.</a>
     </small>
 
 </div>
+
+<script type="module" src="/public/js/auth.js"></script>

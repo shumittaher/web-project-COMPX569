@@ -22,10 +22,13 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link text-end" href="/">🏠 Home</a></li>
+                {{#if user}}
                 <li class="nav-item"><a class="nav-link text-end" href="/account/edit">✏️ Edit Profile</a></li>
+                <li class="nav-item"><a class="nav-link text-end text-danger" href="/account/logout">🚪 Log out</a></li>
+                {{else}}
                 <li class="nav-item"><a class="nav-link text-end" href="/account/create">📝 Register</a></li>
                 <li class="nav-item"><a class="nav-link text-end" href="/account/login">🔑 Log in</a></li>
-                <li class="nav-item"><a class="nav-link text-end text-danger" href="/account/logout">🚪 Log out</a></li>
+                {{/if}}
             </ul>
         </div>
     </div>

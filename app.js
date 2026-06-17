@@ -45,6 +45,11 @@ app.use(session({
     secret: "COMPX569FinalProject"
 }));
 
+app.use((req, res, next) => {
+    res.locals.user = req.session.user || null;
+    next();
+});
+
 // Setup our routes
 const account = require("./routes/account-routes.js");
 app.use("/account", account);
